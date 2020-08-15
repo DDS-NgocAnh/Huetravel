@@ -1,0 +1,98 @@
+.post-header {
+    position: relative;
+
+    &__bookmark {
+        position: absolute;
+        top: -.5rem;
+        right: 1rem;
+        width: 4rem;
+        cursor: pointer;
+
+        .bookmark--unnoted {
+            fill: $color-white;
+            stroke: $color-grey-light-1;
+            stroke-width: 3rem;
+        }
+
+        .bookmark--noted {
+            fill: $color-yellow;
+            stroke: transparent
+        }
+    }
+
+    &__title {
+        font-size: 3rem;
+        font-weight: 600;
+        margin-bottom: .8rem;
+        width: calc(100% - 6rem);
+    }
+
+    &__address {
+        display: flex;
+        width: calc(100% - 6rem);
+        margin-bottom: 1rem;
+
+        .address {
+            &__icon {
+                width: 2rem;
+                margin-right: .5rem;
+            }
+
+            &__info {
+                display: inline-block;
+                width: calc(100% - 2.5rem);
+                align-self: flex-end;
+            }
+        }
+    }
+
+    &__info {
+        display: flex;
+        align-content: center;
+        justify-content: space-between;
+
+
+        &-writer {
+            display: flex;
+            width: 50%;
+            align-items: center;
+
+            .info-writer {
+                &__photo {
+                    width: 4rem;
+                    height: 4rem;
+                    object-fit: cover;
+                    border-radius: 5px;
+                    margin-right: 1rem;
+                }
+
+                &__name {
+                    display: block;
+                    font-weight: 600;
+                    font-size: 1.2rem;
+                }
+
+                &__published-date {
+                    font-size: 1.2rem;
+                    color: #C3C1C1;
+                }
+            }
+
+
+        }
+
+        .assets__content {
+            width: 50%;
+            justify-content: flex-end;
+
+            .assets__box {
+                width: fit-content;
+
+                &:not(:last-child) {
+                    margin-right: 2.4rem;
+                }
+            }
+        }
+    }
+
+}

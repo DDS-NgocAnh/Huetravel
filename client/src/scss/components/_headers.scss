@@ -1,0 +1,36 @@
+.heading-primary {
+    font-family: 'Peddana';
+    font-weight: normal;
+    color: $color-white;
+    line-height: .95;
+
+    &--main {
+        display: block;
+        font-size: 9rem;
+    } 
+
+    &--sub {
+        display: block;
+        font-size: 6rem;
+    }
+}
+
+.heading-secondary {
+    display: inline-block;
+    width: calc(100% - 40rem);
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1.7rem;
+}
+
+.heading-tertiary {
+    text-transform: uppercase;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.heading-sub {
+    text-transform: capitalize;
+    font-size: 1.2rem;
+    font-weight: 600;
+}

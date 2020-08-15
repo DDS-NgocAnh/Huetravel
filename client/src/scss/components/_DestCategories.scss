@@ -1,0 +1,11 @@
+.dest-categories {
+    position: relative;
+}
+
+.underline {
+    width: calc(100% - 1.1em);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-bottom: 3px $color-grey-light-1 solid;
+}

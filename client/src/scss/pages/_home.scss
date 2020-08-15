@@ -1,0 +1,14 @@
+.section-home {
+    @include default-section;
+    background-image: 
+    url("../assets/img/home-background.jpg");
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    height: 100vh;
+
+    .btn-primary {
+        background-color: $color-white;
+        color: $color-primary;
+    }
+}

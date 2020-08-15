@@ -1,0 +1,21 @@
+.text-editor {
+    width: 100%;
+}
+
+.ck-editor{
+    border-radius: 8px;
+
+
+    &__editable_inline {
+        min-height: 20rem; 
+        height: fit-content;
+    }
+
+    &__editable {
+        color: $color-primary;
+    }
+
+    &__editable_focused {
+        border-radius: 8px
+    }
+}

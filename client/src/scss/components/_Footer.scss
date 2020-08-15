@@ -1,0 +1,117 @@
+.footer {
+    position: absolute;
+    bottom: -5rem;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 26rem);
+    height: 18rem;
+    display: flex;
+    border-radius: 12px;
+    background-color: rgba($color-black, .76);
+
+    &__contact {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: calc((100% / 7) - 1px);
+    }
+
+    &__contact-logo {
+        transition: all .4s;
+        &--1 {
+            width: 2rem;
+        }
+
+        &--2 {
+            width: 2.1rem;
+        }
+
+        &--3 {
+            width: 2.5rem;
+        }
+
+        &:not(:last-child) {
+            margin-right: 1rem;
+        }
+
+        &:hover {
+            transform: scale(1.2)
+        }
+    }
+
+    &__vertical-line {
+        width: 1px;
+        background-color: $color-white;
+        margin: 3.2rem auto;
+    }
+
+    &__top-dest-list {
+        width: calc(100% / 7 * 6);
+        padding: 3.2rem 3rem;
+
+        .top-dest-list {
+            &__title {
+                height: 2.8rem;
+                font-size: 1.3rem;
+                letter-spacing: 1px;
+                color: $color-white;
+                text-transform: uppercase;
+            }
+
+            &__content {
+                display: flex;
+                height: calc(100% - 2.8rem);
+                .top-dest-box {
+                    display: flex;
+                    transition: all .4s;
+                    transition: all .4s;
+
+                    &__photo {
+                        object-fit: cover;
+                        background-size: cover;
+                        border-radius: 8px;
+                        width: 50%;
+                    }
+
+                    &__info {
+                        padding: .5rem 0 .5rem 1.5rem;
+                        position: relative;
+                        width: 50%;
+
+                        .info {
+                            display: block;
+                            font-weight: 600;
+
+                            &--ranking {
+                                height: 1.7rem;
+                                color: $color-yellow;
+                            }
+
+                            &--title {
+                                color: $color-white;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                margin: .5rem 0;
+                                height: 3.2rem;
+                            }
+
+                            &--btn {
+                                height: 1.7rem;
+                                color: $color-grey-light-1;
+                                position: absolute;
+                                bottom: .5rem;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+
+                                &:hover {
+                                    color: $color-white;
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+}

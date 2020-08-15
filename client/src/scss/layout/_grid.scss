@@ -1,0 +1,30 @@
+.col-1-of-3 {
+    width: calc((100% - #{$gutter-vertical} * 2) / 3);
+    @include margin-ex-last-el($gutter-vertical)
+}
+
+
+.col-1-of-4 {
+    width: calc((100% - #{$gutter-vertical} * 3) / 4);
+    @include margin-ex-last-el($gutter-vertical)
+}
+
+.dest-list-container {
+    display: grid;
+    width: calc(100% - 10rem);
+    height: calc(100% - 20.6rem);
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    column-gap: $gutter-vertical-medium;
+    row-gap: $gutter-horizontal-medium;
+    overflow: hidden;
+}
+
+.review,
+.section-user-profile {
+    display: grid;
+    grid-template-columns: 2fr 8fr;
+    column-gap: $gutter-vertical;
+    height: calc(100% - 2.4rem);
+}
+

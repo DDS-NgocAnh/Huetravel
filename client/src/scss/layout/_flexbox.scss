@@ -1,0 +1,34 @@
+.dest-categories-container {
+    @include space-between;
+    margin-left:5rem;
+    margin-right: 11rem;
+}
+
+.filter-container {
+    @include space-between;
+    height: 3.5rem;
+    position: relative;
+}
+
+.dropdown {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.page-control-container {
+    display: flex;
+    justify-content: center;
+
+    .page-control__pages {
+        display: flex;
+        margin: 0 2rem;
+        width: 9.4rem;
+    }
+}
+
+.review__submit {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 2rem;
+}

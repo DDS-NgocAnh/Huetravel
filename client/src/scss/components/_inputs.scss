@@ -1,0 +1,130 @@
+.input {
+    height: 4rem;
+    display: inline-block;
+    width: 100%;
+    padding: 0 1.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 6px;
+    border: 1px $color-grey-light-2 solid;
+    background-color: $color-white;
+
+
+    &--error {
+      background-color: $color-white; 
+      border: 1px $color-red solid;
+
+      &::placeholder {
+        color: $color-red;
+      }
+    }
+
+    &::placeholder,
+    &:-webkit-input-placeholder {
+        color: $color-border-primary;
+    }
+
+    &--transparent {
+        @include transparent-el;
+        height: 100%;
+        border: none;
+    }
+}
+
+input[type='file'] {
+  display: inline-block;
+  -webkit-appearance: none;
+  display: relative;
+      
+  &:after { /* Mask the no file chosen label */
+    background-color: $color-primary;
+    content: '';
+    display: inline-block;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+  }
+
+  &::-webkit-file-upload-button { /* Style the button */
+    background: none;
+    color: $color-white;
+    padding: 0;
+    position: absolute;
+    border: none;
+    left: 50%;
+    top: 50%;
+    font-weight: 600;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    -webkit-appearance: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+input[type='radio'] {
+  cursor: pointer;
+  display: none;
+}
+
+.input-radio {
+  display: inline-block;
+
+  &:not(:last-child) {
+    margin-right: 1.5rem;
+  }
+
+  &--block label{
+    @include default-btn(4rem, 8px, $color-grey-light-4, $color-primary, none, 1.2rem, center);
+    display: inline-block;
+    line-height: 4rem;
+    width: 10rem;
+  }
+
+  &--block input[type='radio']:checked + label {
+    @include default-btn(4rem, 8px, $color-yellow-light, $color-yellow, none, 1.2rem, center);
+  }
+
+  &--text label {
+    @include default-btn(3.3rem, 0, none, $color-primary, none, center);
+    line-height: 2.8rem;
+    display: inline-block;
+  }
+
+  &--text input[type='radio']:checked + label {
+    position: relative;
+    z-index: 3;
+    border-bottom: 3px $color-yellow solid;
+  }
+}
+
+.input-border {
+  height: 4rem;
+  margin: 0 1rem;
+  width: calc(100% - 2rem);
+  border: none;
+  background-color: transparent;
+  border-bottom: 2px $color-yellow solid;
+
+  &:not(:last-child) {
+    margin-bottom: .7rem;
+  }
+
+  &--error {
+    border-bottom: 2px $color-red solid;
+
+    &::placeholder {
+      color: $color-red;
+    }
+  }
+}

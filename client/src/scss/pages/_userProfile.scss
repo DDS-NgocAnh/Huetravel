@@ -1,0 +1,21 @@
+.section-user-profile {
+    @include default-section;
+    width: calc(100% - 10rem);
+    height: calc(100vh - 81px);
+
+    & > * {
+        padding-bottom: 1rem;
+    }
+
+    .user {
+        &__posts,
+        &__info {
+            &>*:not(:last-child) {
+                margin-bottom: 1.5rem;
+                padding-bottom: 1.5rem;
+                border-bottom: 1px $color-grey-light-3 solid;
+            }
+        }
+
+    }
+}

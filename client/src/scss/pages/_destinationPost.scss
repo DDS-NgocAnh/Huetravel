@@ -1,0 +1,30 @@
+.section-destination-post {
+    @include default-section;
+    width: 70rem;
+    margin: 0 auto;
+
+    & > *:not(:last-child) {
+        border-bottom: 1px $color-grey-light-4 solid;
+    }
+
+    & > * {
+        margin-top: 2rem;
+        padding-bottom: 1.5rem;
+        height: fit-content;
+    }
+
+    & > *:last-child {
+        margin-bottom: 2rem
+    }
+
+    .post {
+        &__edit-group-btn {
+            display: flex;
+            justify-content: flex-end;
+
+            &>*:not(:last-child) {
+                margin-right: 1rem;
+            }
+        }
+    }
+}

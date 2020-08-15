@@ -1,0 +1,57 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html {
+    //This defines what 1rem is
+    font-size: 62.5%;
+    background-color: $color-background;
+}
+
+body {
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    font-size: $default-font-size;
+    color: $color-primary;
+}
+
+button, a, img, input {
+    border: transparent;
+    outline: none;
+    &:focus {
+        outline:none;
+    }
+}
+
+
+a {
+    text-decoration: none;
+    color: $color-primary;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+}
+
+#app {
+    width: 100%;
+    height: calc(100vh - 81px);
+}
+
+button:disabled {
+    border: none;
+    cursor: auto;
+    background-color: $color-grey-light-4;
+
+    &:hover {
+        cursor: auto;
+        background-color: $color-grey-light-4;
+        color: $color-primary;
+    }
+}

@@ -1,0 +1,8 @@
+.section-destinations {
+    @include default-section;
+    height: 100vh;
+
+    .dest-box {
+        position: relative;
+    }
+}

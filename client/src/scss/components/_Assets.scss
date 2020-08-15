@@ -1,0 +1,34 @@
+.assets {
+
+    &__content {
+        display: flex;
+
+        .assets__box {
+            display: flex;
+            align-content: center;
+            width: calc(100% / 2 - 1.5rem);
+            &:not(:last-child) {
+                margin-right: 1.5rem;
+            }
+
+            &-icon {
+                width: 3rem;
+                height: 3rem;
+                object-fit: cover;
+                &:not(:last-child) {
+                    margin-right: .7rem;
+                }
+            }
+
+            &-name {
+                display: inline-block;
+                width: calc(100% - 3.7rem);
+                line-height: 3rem;
+                font-weight: 600;
+                font-size: 1.2rem;
+                @include text-overflow;
+                white-space: nowrap;
+            }
+        }
+    }
+}

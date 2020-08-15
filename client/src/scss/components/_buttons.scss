@@ -1,0 +1,191 @@
+.btn-primary {
+    @include default-btn(2.8rem, 8px, $color-primary, $color-white, none, center);
+    display: inline-block;
+    line-height: 2.8rem;
+    padding-left: 2.8rem;
+    padding-right: 2.8rem;
+    backface-visibility: hidden;
+    transition: all .4s;
+
+    &--grey {
+        color: $color-white;
+        background-color: $color-primary;
+    }
+    
+    @include default-btn-animated;
+}
+
+.btn-transparent {
+    @include default-btn(3.3rem, 0, none, $color-primary, none, center);
+    display: inline-block;
+    line-height: 2.8rem;
+
+    &:hover + &--current {
+        border-bottom: none !important;
+    }
+    
+    &:hover, 
+    &--current {
+        position: relative;
+        z-index: 1;
+        border-bottom: 3px $color-yellow solid;
+    }
+
+    &:not(:last-child) {
+        margin-right: 3rem;
+    }
+
+    &--white {
+        color: $color-white;
+    }
+}
+
+.btn-border {
+    @include default-btn(3.3rem, 6rem, none, $color-white, $color-white, $text-align: center);
+    display: block;
+    margin: 0 auto;
+    border: 2px $color-white solid;
+    text-transform: uppercase;
+    width: 15rem;
+    line-height: 3rem;
+    position: relative;
+    backface-visibility: hidden;
+    transition: all;
+
+    &::after {
+        content: '';
+        text-align: center;
+        display: block;
+        width: calc(100% + .2rem);
+        height: calc(100% + .2rem);
+        position: absolute;
+        top: -.1rem;
+        left: -.1rem;
+        z-index: 0;
+        border-radius: 14px;
+        transition: all .4s ease-in-out;
+        border: 1px $color-white solid;
+    }
+
+    &:hover, &:active {
+        &::after {
+            transform: scaleX(1.5) scaleY(1.8);
+            -webkit-filter: blur(20px);
+            filter: blur(20px);
+            opacity: 0;
+        }
+    }
+}
+
+.btn-arr {
+    @include default-btn;
+    font-size: 1.3rem;
+    backface-visibility: hidden;
+    transition: all .4s;
+
+    &--yellow {
+        color: $color-yellow;
+    }
+
+    &--right {
+        &:hover {
+            transform: translateX(2px);
+        }
+    }
+
+    &--left {
+        &:hover {
+            transform: translateX(-2px);
+        }
+    }
+    
+}
+
+.btn-page-control {
+    @include default-btn(2.8rem, 4px, $color-white, $color-primary, $color-primary, 1.2rem, center);
+    display: inline-block;
+    line-height: 2.8rem;
+    width: 7.5rem;
+    text-transform: capitalize;
+
+    &:hover {
+        color: $color-white;
+        background-color: $color-primary;
+    }
+}
+
+.btn-page {
+    @include default-btn(2.8rem, 4px, none, $color-primary, none, 1.2rem, center);
+    width: 2.8rem;
+    line-height: 2.8rem;
+
+    &:not(:last-child) {
+        margin-right: .5rem;
+    }
+
+    &:hover:not(.btn-page--current) {
+        border-radius: 0;
+        border-bottom: 2px $color-primary solid;
+    }
+
+    &--current {
+        background-color: $color-grey-light-3;
+
+        &:hover {
+            cursor: auto;
+        }
+    }
+}
+
+.btn--white {
+    color: $color-white;
+}
+
+.btn-slider {
+    position: relative;
+    z-index: 100;
+    color: $color-grey-light-1;
+    font-size: 1.7rem;
+    line-height: 3.3rem;
+    width: 3.3rem;
+    height: 3.3rem;
+    background-color: $color-white;
+    border-radius: 50%;
+    display: inline-block;
+    transition: all .4s;
+    border:1px $color-grey-light-1 solid;
+
+    &:hover {
+        color: $color-white;
+        border:none;
+        background-color: $color-primary;
+        cursor: pointer;
+    }
+
+    & span {
+        position: absolute;
+        top: 50%;
+        left:50%;
+        transform: translate(-50%, -50%);
+    }
+
+    &--left {
+        transform: rotateY(-180deg);
+        position: absolute;
+        left: 0;
+        top: 7rem;
+    }
+
+    &--right {
+        position: absolute;
+        right: 0;
+        top: 7rem;
+    }
+}
+
+.btn-delete {
+    @include default-btn(2.8rem, 4px, $color-red-light, $color-red, none, 1.2rem, center);
+    display: inline-block;
+    line-height: 2.8rem;
+    width: 7.5rem;
+}

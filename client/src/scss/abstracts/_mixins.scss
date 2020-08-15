@@ -1,0 +1,80 @@
+@mixin default-btn($height:auto, $border-radius:none, 
+$bg-color:none, $color:none, $border-color:none,
+$font-size: $default-font-size, $text-align:auto) {
+    font-weight: 600;
+    border-radius: $border-radius;
+    background-color: $bg-color;
+    color: $color;
+    border: 1px $border-color solid;
+    height: $height;
+    font-size: $font-size;
+    text-align: $text-align;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+@mixin transparent-el {
+    background-color: transparent;
+    border: transparent;
+    outline: transparent;
+
+    &:hover,
+        &:active,
+        &:focus {
+            outline: transparent;
+    }
+}
+
+@mixin default-section {
+    background-color: $color-background;
+    padding-top: 81px;
+
+    .btn-transparent {
+        color: $color-primary;
+    }
+}
+
+@mixin default-btn-animated {
+    &:hover {
+        transform: translateY(-2px);
+    }
+
+    &:active {
+        transform: translateY(0px);
+    }
+}
+
+@mixin space-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@mixin abs-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin margin-ex-last-el($gutter) {
+    &:not(:last-child) {
+        margin-right: $gutter;
+    } 
+}
+
+@mixin text-overflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@mixin clearfix {
+    &::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+}
+
