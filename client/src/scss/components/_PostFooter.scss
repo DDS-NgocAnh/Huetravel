@@ -10,11 +10,20 @@
             display: flex;
         }
 
-        &-box,
-        &-box--react {
+        &-box {
             &:not(:last-child) {
                 margin-right: 4rem;
             }
+        }
+
+        &-box,
+        &-box--react,
+        .react--none {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            
 
             &:hover {
                 cursor: pointer;
@@ -29,16 +38,23 @@
                 width: calc(100% / 2);
 
                 &__icon {
-                    display: block;
+                    display: inline-block;
                     width: 5rem;
                     margin: 0 auto .8rem auto;
                 }
 
                 &__title {
-                    display: block;
+                    display: inline-block;
                     font-size: 1.2rem;
                     font-weight: 600;
                 }
+            }
+        }
+
+        .react--reacted {
+            .reaction-box__icon,
+            .reaction-box__title {
+                opacity: 1;
             }
         }
 

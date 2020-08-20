@@ -22,9 +22,16 @@
             cursor: pointer;
         }
 
-        .bookmark-icon {
-            width: 100%;
+        .bookmark--unnoted {
             fill: $color-white;
+
+            &:hover {
+                fill: $color-yellow;
+            }
+        }
+
+        .bookmark--noted {
+            fill: $color-yellow;
         }
     }
 
@@ -37,7 +44,7 @@
         z-index: 3;
 
         .react-box {
-            width: 5.4rem;
+            width: 5rem;
             background-color: $color-white;
             border-radius: 20px;
 
@@ -53,6 +60,8 @@
 
             &__info {
                 position: absolute;
+                display: inline-block;
+                width: 2.4rem;
                 top: .5rem;
                 font-size: 1rem;
                 font-weight: 600;

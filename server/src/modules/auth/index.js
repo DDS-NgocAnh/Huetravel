@@ -55,7 +55,7 @@ const handlers = {
                     if(err) {
                         next(err)
                     } else {
-                        res.send({ "message": 'Success! Please check your email to confirm' })
+                        res.send({ "message": 'Success! Please check your email' })
                     }
                 })
             } else {
@@ -110,9 +110,13 @@ const handlers = {
 
             let formattedEmail = String(email)
             let hashedPassword = hashMd5(String(password))
+            let populateQuery = [
+                { path: 'notifications', model: 'Notification', match: { isSeen: false },
+            }
+               ]
 
             let user = await User.findOne({ email: formattedEmail })
-            .populate('notifications')
+            .populate(populateQuery)
 
             if(!user) {
                 throw new Error(`User not found!`)
@@ -126,16 +130,20 @@ const handlers = {
 
             let payload = {
                 id: user._id,
+                name: user.name,
+                avatar: user.avatar,
+                unSeenNotifications: user.notifications.length,
+                notes: user.notes,
+                reviews: user.reviews,
+                flowers: user.flowers,
+                rocks: user.rocks
             }
 
             let token = signToken(payload)
 
             res.json({
                 message: 'Logged in',
-                token: 'Bearer ' + token,
-                id: user._id,
-                avatar: user.avatar,
-                notifications: user.notifications
+                token: 'Bearer ' + token
             })
 
         } catch (error) {
@@ -154,28 +162,24 @@ const handlers = {
     async getProfile(req, res, next) {
         try {
             let id = req.params.userId
-            let pathSelect = 'name address avatar'
+            let pathSelect = 'name address avatar rocksTotal flowersTotal notes'
             let populateQuery = [
-                { path: 'reviews', model: 'Post', select: pathSelect },
-                { path: 'notes.post', model: 'Post', select: pathSelect }
-               ]
-
-            await User.aggregate([
-                { $match: { _id: id } },
-                {$project: {
-                    flowersTotal: { $sum: "$reviews.flowersTotal"},
-                    rocksTotal: { $sum: "$reviews.rocksTotal"}
-                }}
-            ])
+                { path: 'reviews', model: 'Post', select: pathSelect,
+                populate: {path: 'notes', select: 'user._id'} },
+                { path: 'notes.post', model: 'Post', select: pathSelect,
+                populate: {path: 'notes', select: 'user._id'}}]
 
             let user = await User.findById(id)
             .populate(populateQuery)
+
+            let userData = user.toObject()
+            let notes = userData.notes.map(note => note.post)
 
             res.json({
                 id: user._id,
                 name: user.name,
                 avatar: user.avatar,
-                notes: user.notes,
+                notes: notes,
                 reviews: user.reviews,
                 flowersTotal: user.flowersTotal,
                 rocksTotal: user.rocksTotal
@@ -229,6 +233,18 @@ const handlers = {
             await User.updateOne({ _id: req.user.id }, { name: newName })
 
             res.json({ message: 'Name was changed successfully'})
+
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    async changeAvatar(req, res, next) {
+        try {
+            let newAvatar = req.body.avatar
+            await User.updateOne({ _id: req.user.id }, { avatar: newAvatar })
+
+            res.json({ message: 'Avatar was changed successfully'})
 
         } catch (error) {
             next(error)

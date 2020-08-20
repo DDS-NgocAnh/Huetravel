@@ -12,6 +12,11 @@
             fill: $color-white;
             stroke: $color-grey-light-1;
             stroke-width: 3rem;
+
+            &:hover {
+                fill: $color-yellow;
+                stroke: transparent
+            }
         }
 
         .bookmark--noted {

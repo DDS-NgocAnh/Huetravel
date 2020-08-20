@@ -1,39 +1,53 @@
+//TODO: update redux when react, note Post
+
 import React, { Component } from "react"
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import * as actionTypes from '../../../store/actions/actionTypes'
+import { logout } from '../../../store/actions/authAction'
+
 import LoginPopup from '../Popup'
 
 import logOutIcon from '../../../assets/icons/logout.png'
 import logOutWhiteIcon from '../../../assets/icons/white-logout.png'
 
-import demo from '../../../assets/img/avatar-demo.jpg'
+const mapStateToProps = (state) => {
+  return {
+    isOpen: state.popup.isOpen,
+    isLoggedIn: state.currentUser.isLoggedIn,
+    currentUser: state.currentUser.userData
+  }
+}
 
-export default class MainNav extends Component {
+const mapDispatchToProps = dispatch => {
+  return {
+    onOpen: () => dispatch({
+      type: actionTypes.OPEN_POPUP
+    }),
+    onLogout: () => dispatch(logout())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) 
+(withRouter(class MainNav extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      isOpen: false,
-      path: window.location.pathname,
-      // previousPath: localStorage.getItem('previousPath') 
-    }
 
-    this.openPopup = this.openPopup.bind(this)
-    this.closePopup = this.closePopup.bind(this)
-    // this.deletePath = this.deletePath.bind(this)
+    this.logout = this.logout.bind(this)
+    this.goBack = this.goBack.bind(this)
   }
 
-  // deletePath() {
-  //   localStorage.setItem('previousPath', '')
-  // }
+  logout() {
+    localStorage.removeItem('jwtToken')
+    this.props.onLogout()
+  }
 
-  openPopup(event) { this.setState({ isOpen: true}) }
-  closePopup(event) { this.setState({ isOpen: false}) }
-  clickHandler(path) {
-      this.setState({ path: path })
+  goBack() {
+    this.props.history.goBack();
   }
 
   render() {
-    let { isOpen, path, previousPath } = this.state
-
+    const path = this.props.history.location.pathname
     let colorBtn = path == '/' ? 
     'btn-transparent btn-transparent--white' :
     'btn-transparent'
@@ -42,38 +56,46 @@ export default class MainNav extends Component {
     logOutWhiteIcon :
     logOutIcon
 
-    // let backBtn = previousPath ? true : false
+    let userProfileLink
+    if(this.props.isLoggedIn) {
+      userProfileLink = `/${this.props.currentUser.id}`
+    }
+    let checkBackBtn = ['/', '/destinations', '/review', '/user']
+
+    let backBtn = checkBackBtn.some(el=> path == el) ? 
+    false : true
 
     return (
       <>
-        <LoginPopup
-          isOpen = {isOpen}  
-          onClose = {this.closePopup}
-        />
+        <LoginPopup/>
         <div className="main-nav">
-          {/* {backBtn && (
-            <Link onClick={this.deletePath()} to={previousPath} className='btn-arr btn-arr--left'>&larr; Back</Link>
-          )} */}
+          {backBtn && (
+            <a onClick={this.goBack}  className='btn-arr btn-arr--left'>&larr; Back</a>
+          )}
           <div className='main-nav__content'>
             <nav className="main-nav__nav">
-              <NavLink onClick={() => this.clickHandler('/')} exact to="/" activeClassName='btn-transparent--current' className={colorBtn}>Home</NavLink>
-              <NavLink onClick={() => this.clickHandler('/destinations')} to="/destinations" activeClassName='btn-transparent--current' className={colorBtn}>Destinations</NavLink>
-              <NavLink onClick={() => this.clickHandler('/review')} to="/review" activeClassName='btn-transparent--current' className={colorBtn}>Review</NavLink>
+              <NavLink  exact to="/" activeClassName='btn-transparent--current' className={colorBtn}>Home</NavLink>
+              <NavLink  to="/destinations" activeClassName='btn-transparent--current' className={colorBtn}>Destinations</NavLink>
+              <NavLink  to="/review" activeClassName='btn-transparent--current' className={colorBtn}>Review</NavLink>
             </nav>
-            <div className="main-nav__log-in-status">
-              <a onClick = {this.openPopup} className="btn-primary">Log in</a>
-            </div>
-            {/* <div className="main-nav__log-in-status">
-              <NavLink onClick={() => this.clickHandler('/:userId')} to='/:userId' className='btn-avatar'>
-                <img src={demo} className='avatar-icon' alt='Avatar'></img>
-              </NavLink>
-              <a className="btn-logout">
-                <img src={icon} className='logout-icon' alt='Logout'></img>
-              </a>
-            </div> */}
+            {!this.props.isLoggedIn && (
+              <div className="main-nav__log-in-status">
+                <a onClick = {this.props.onOpen} className="btn-primary">Log in</a>
+              </div>
+            )}
+            {this.props.isLoggedIn && (
+              <div className="main-nav__log-in-status">
+                <NavLink to={userProfileLink} className='btn-avatar'>
+                  <img src={this.props.currentUser.avatar} className='avatar-icon' alt='Avatar'></img>
+                </NavLink>
+                <a className="btn-logout" onClick={this.logout}>
+                  <img src={icon} className='logout-icon' alt='Logout'></img>
+                </a>
+              </div> 
+            )}
           </div>
         </div>
       </>
     )
   }
-}
+}))

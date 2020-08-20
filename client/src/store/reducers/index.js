@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux'
-import authReducers from './authReducers'
-import postReducers from './postReducers'
-// import notificationReducers from './notificationReducers'
+import loginReducer from './authReducer'
+import popupReducer from './popupReducer'
+import postReducer from './postReducer'
 
 
 export default combineReducers({
-    users: authReducers,
-    posts: postReducers,
-    // notifications: notificationsReducers,
+    currentUser: loginReducer,
+    popup: popupReducer,
+    postUpdate: postReducer,
 })

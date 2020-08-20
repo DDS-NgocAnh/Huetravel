@@ -89,6 +89,7 @@
                 position: relative;
 
                 .toggle-btn {
+                   
                     &__effect {
                         position: absolute;
                         bottom: 0;
@@ -126,12 +127,11 @@
             &__noti--error,
             &__noti--default {
                 text-align: center;
-                height: 2.5rem;
-                line-height: 2.5rem;
-                font-size: 1.2rem;
-                margin: 0 auto .7rem auto;
+                height: 2.2rem;
+                line-height: 2.2rem;
+                font-size: 1.1rem;
+                margin: .6rem auto .8rem auto;
                 width: fit-content;
-                font-weight: 600;
                 padding: 0 1rem;
                 border-radius: 4px;
                 color: $color-green;
@@ -152,8 +152,9 @@
                 margin: 0 3rem;
                 text-align: center;
                 width: calc(100% - 6rem);
-                height: 27rem;
+                height: 30rem;
                 overflow: hidden;
+
 
                 .input-border:disabled {
                     border-bottom: 2px $color-grey-light-1 solid;

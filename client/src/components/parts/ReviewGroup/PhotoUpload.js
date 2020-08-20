@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 
 import CFileUpload from '../../pieces/FileUpload'
 import imageDefault from '../../../assets/img/image-default.png'
@@ -8,25 +7,26 @@ import imageDefault from '../../../assets/img/image-default.png'
 export default class PhotoUpload extends Component {
     constructor(props){
         super(props)
-        this.state = {
-        //   avatar: imageDefault,
-        }
-        // this.fileSelectedHandler = this.fileSelectedHandler.bind(this)
+        this.inputHandler = this.inputHandler.bind(this)
       }
 
-    // fileSelectedHandler(event) {
-    // this.setState({
-    //     avatar: URL.createObjectURL(event.target.files[0]),
-    // })
-    // }
+    inputHandler(data) {
+        if(this.props.onChange) {
+            this.props.onChange(data)
+        }
+    }
 
     render() {
-
+        let avatar  = imageDefault
+        if(!this.props.reset) {
+            avatar = this.props.avatar || imageDefault
+        }
         return (
             <CFileUpload 
-                // onChange={this.fileSelectedHandler} 
-                defaultImg = {imageDefault}
+                reset = {this.props.reset}
+                defaultImg = {avatar}
                 disabled = {this.props.disabled}
+                onChange={this.inputHandler}
             />
         )
     }

@@ -1,5 +1,7 @@
-import React, { Component } from 'react'
-import CDestBox from '../../pieces/DestBox'
+import React, { Component, Suspense, lazy } from 'react'
+import Loading from '../../pieces/Loading'
+
+const CDestBox = lazy(() => import('../../pieces/DestBox'))
 
 export default class Dest extends Component {
     constructor(props) {
@@ -7,19 +9,23 @@ export default class Dest extends Component {
     }
 
     render() {
+        let posts = this.props.posts
+        let haveElement = posts.length > 0 ? true : false
         return (
             <>
-                <CDestBox />
-                <CDestBox />
-                <CDestBox />
-                <CDestBox />
-                <CDestBox />
-                <CDestBox />
-                <CDestBox />
-                <CDestBox />
-                <CDestBox />
-                <CDestBox />
-
+            {haveElement && (
+                posts.map((post, index) =>
+                <Suspense 
+                key={index}
+                fallback={<Loading/>}>
+                    <CDestBox 
+                    info={post}/>            
+                </Suspense>
+                )
+            )}
+            {!haveElement && (
+                <h2 className='u-center-text u-text-bold u-center-el u-color-light'>No post found</h2>
+            )}
             </>
         )
     }

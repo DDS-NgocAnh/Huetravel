@@ -1,61 +1,58 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
-// import Slider from 'react-slick'
 import CDestBox from './DestBox'
 
-// function SamplePrevArrow() {
-//     return (
-//       <div className='btn-slider btn-slider--left'><span>&#10140;</span></div>
-//     );
-// }
-
-// function SampleNextArrow() {
-//     return (
-//       <div className='btn-slider btn-slider--right'><span>&#10140;</span></div>
-//     );
-// }
-
-export default class Slick extends Component {
-    constructor(props = { tittle }) {
+export default 
+withRouter(class Slick extends Component {
+    constructor(props = { title }) {
         super(props)
+        this.state = {
+            userId: props.match.params.userId
+        }
 
-        this.savePath = this.savePath.bind(this)
-    }
-
-    savePath(path) {
-        localStorage.setItem('previousPath', path)
     }
 
     render() {
-        // const settings = {
-        //     dot: true,
-        //     infinite: true,
-        //     speed: 500,
-        //     slidesToShow: 5,
-        //     slidesToScroll: 3,
-        //     arrow: true,
-        //     lazyLoad: true,
-        //     // nextArrow: <SampleNextArrow />,
-        //     // prevArrow: <SamplePrevArrow />,
-        //     className: 'slick__slider'
-        // }
-        let title = this.props.title
+        let { title } = this.props
+        let posts = this.props[title]
 
-        return (
-            <div className='slick'>
-                <div className='slick__title'>
-                    <h5 className='heading-tertiary'>{title}</h5>
-                    <Link onClick={this.savePath(`/:userId`)} to={`/:userId/` + title} className='btn-arr btn-arr--right'>See all &rarr;</Link>
+        let link = `${this.state.userId}/${title}` 
+
+        if(posts && posts.length) {
+            let isSeeAll = posts.length > 4 ? true : false
+            posts = posts.slice(0,4)
+            return (
+                <div className='slick'>
+                    <div className='slick__title'>
+                        <h5 className='heading-tertiary'>{title}</h5>
+                        {isSeeAll && (
+                            <Link to={link} className='btn-arr btn-arr--right'>See all &rarr;</Link>
+                        )}
+                    </div>
+                    <div className='slick__content'> 
+                        {posts.map( post => {
+                            return (
+                                <CDestBox key={post._id} info={post}/>
+                            )
+                        })
+                        }      
+                    </div>
                 </div>
-                <div className='slick__content'>
-                    <CDestBox/>
-                    <CDestBox/>
-                    <CDestBox/>
-                    <CDestBox/>
-                    <CDestBox/>
+            )
+        } else {
+            return (
+                <div className='slick'>
+                    <div className='slick__title'>
+                        <h5 className='heading-tertiary'>{title}</h5>
+                    </div>
+                    <div className='slick__content'>
+                        <h2 className='u-center-text u-text-bold u-center-el u-color-light'>No post found</h2>     
+                    </div>
                 </div>
-            </div>
-        )
+            )
+        }
+
+
     }
-}
+})

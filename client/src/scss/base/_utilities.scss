@@ -2,6 +2,15 @@
 
 .u-text-bold { font-weight: 600;}
 
+.u-center-el {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+}
+
+.u-color-light { color: $color-grey-light-2 }
+
 .u-margin-bottom-huge { margin-bottom: 3.4rem; }
 .u-margin-bottom-big { margin-bottom: 2.8rem; }
 .u-margin-bottom-medium { margin-bottom: 2rem; }

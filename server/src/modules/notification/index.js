@@ -12,13 +12,13 @@ const handlers = {
 
             let conditions = {}
             conditions.user = req.user.id
-            conditions.status = 'unread'
+            conditions.isSeen = false
 
             let count = await Notification.countDocuments(conditions)
 
             res.json({
                 listNoti: user.notifications,
-                unreadNoti: count
+                unSeenNoti: count
             })
 
         } catch (error) {

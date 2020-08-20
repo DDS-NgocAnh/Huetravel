@@ -2,17 +2,20 @@ require('./connect-mongo')
 
 const express = require('express')
 const bodyParser = require('body-parser')
+const http = require("http")
+const socketIo = require("socket.io")
 
 const passport = require('passport')
 
-const multipart = require('connect-multiparty')
-const MultipartMiddleware = multipart({ uploadDir: '../images' })
+const fileUpload = require('express-fileupload')
+
 const morgan = require('morgan')
 
 const cors = require('./cors')
 
 //Import Routes
 const userRoutes = require('./routes/auth')
+const uploadRoutes = require('./routes/upload')
 const postRoutes = require('./routes/post')
 const commentRoutes = require('./routes/comment')
 const notificationRoutes = require('./routes/notification')
@@ -22,9 +25,21 @@ const PORT = process.env.PORT || 9000;
 
 const app = express();
 
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
+const server = http.createServer(app);
+const io = socketIo(server)
 
+io.on('connection', (socket) => {
+  console.log('We have a new connection!!!')
+
+  socket.on('disconnect', () => {
+    console.log('User has left!!!');
+  })
+});
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
+
+app.use(fileUpload())
 //Passport Middleware
 app.use(passport.initialize())
 
@@ -36,6 +51,7 @@ app.use(cors)
 
 //Routes Middleware
 app.use('/api/user', userRoutes)
+app.use('/api/upload', uploadRoutes)
 app.use('/api/post', postRoutes)
 app.use('/api/comment', commentRoutes)
 app.use('/api/notification', notificationRoutes)
@@ -47,12 +63,7 @@ app.use((err, req, res, next) => {
         stack: err.stack
       })
 })
-  
-app.post('/uploads', MultipartMiddleware, (req, res) => {
-    console.log(req.files.upload);
-    // console.log(res);
-})
     
-app.listen(PORT, (err) => {
-    console.log(err || `Server opend at port '${PORT}'`)
-})
+server.listen(PORT, (err) => {
+    console.log(err || `Server opend at port '${PORT}'`);
+});

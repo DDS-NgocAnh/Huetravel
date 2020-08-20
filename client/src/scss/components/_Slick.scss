@@ -8,14 +8,18 @@
     }
 
     &__content {
+        position: relative;
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        column-gap: $gutter-vertical-small;
+        grid-template-columns: repeat(4, 1fr);
+        column-gap: $gutter-vertical-medium;
         height: 100%;
 
         &>* {
             max-height: 18rem;
             position: relative;
+        }
+        & h2 {
+            position: absolute;
         }
     }
 }

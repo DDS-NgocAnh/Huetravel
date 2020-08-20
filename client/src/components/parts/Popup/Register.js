@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 import { connect } from 'react-redux'
-
-import { register } from '../../../store/actions/authActions'
+import * as actionTypes from '../../../store/actions/actionTypes'
 
 import { inputHandler, validatePwd, 
     validateEmail, checkMatchPwd,
@@ -9,18 +9,19 @@ import { inputHandler, validatePwd,
 
 const mapStateToProps = (state) => {
     return {
-        isLoading: state.isLoading
+        register: state.popup.register
     }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDisPatchToProps = dispatch => {
     return {
-        onRegister: (name, email, password) => 
-        dispatch(register(name, email, password))
+        onSubmit: () => dispatch({type: actionTypes.POPUP_SUBMIT}),
+        submitDone: () => dispatch({type: actionTypes.POPUP_SUBMIT_DONE})
     }
 }
+    
 
-export default connect(mapStateToProps, mapDispatchToProps)
+export default connect(mapStateToProps, mapDisPatchToProps) 
 (class Register extends Component {
     constructor(props) {
         super(props)
@@ -33,6 +34,8 @@ export default connect(mapStateToProps, mapDispatchToProps)
             password: '',
             passwordCheck: '',
             name: '',
+            errorMessage: '',
+            successMessage: ''
         }
 
         this.submitHandler = this.submitHandler.bind(this)
@@ -44,13 +47,14 @@ export default connect(mapStateToProps, mapDispatchToProps)
     }
 
     UNSAFE_componentWillUpdate(nextProps, nextState) {
-        if(!nextProps.isLoading) {
-            nextState.isDisabled = false
-            nextState.email = ''
-            nextState.password = ''
-            nextState.passwordCheck = ''
-            nextState.name = ''
-            nextState.inputStyle = 'input-border '
+        if(!nextProps.register) {
+            this.pwdInput.className = this.state.inputStyle
+            this.emailInput.className = this.state.inputStyle
+            this.nameInput.className = this.state.inputStyle
+            this.pwdCheckInput.className = this.state.inputStyle
+            this.form.reset()
+            nextState.errorMessage = ''
+            nextState.successMessage = ''
         }
     }
 
@@ -72,28 +76,64 @@ export default connect(mapStateToProps, mapDispatchToProps)
         }
 
         if(check1 && check2 && check3 && check4 && check5) {
+            this.props.onSubmit()
+
             this.setState({
                 isDisabled: true
             })
 
-            this.props.onRegister(
-                this.state.name,
-                this.state.email,
-                this.state.password  
-            )
+            let newUser = {
+                email: email,
+                name: name,
+                password: password
+            }
+
+            axios.request({
+                url: 'http://localhost:9000/api/user/register',
+                method: 'POST',
+                data: newUser
+              })
+              .then(res => {
+                let successMessage = res.data.message
+                this.setState({ successMessage })
+              })
+              .catch(err => {
+                let errorMessage = err.response.data.message
+                this.setState({ errorMessage })
+              })
+              .finally(() => {
+                  this.props.submitDone()
+                    this.form.reset()
+                    this.setState({
+                        isDisabled: false,
+                    })
+              })
+
         }
     }
 
     render() {
         let { isDisabled, 
             inputStyle,
-         } = this.state
+            successMessage,
+            errorMessage
+        } = this.state
 
         
         let disabled = isDisabled ? 'disabled' : ''
 
         return (
-            <form >
+        <>    
+            {(!errorMessage && !successMessage) && (
+                <div className='content__noti--default'></div>)}
+            {errorMessage && (
+                <div className='content__noti--error'>{errorMessage}</div>
+            )}
+            {successMessage && (
+                <div className='content__noti'>{successMessage}</div>
+            )}
+            <form 
+                ref = {(ref) => this.form = ref}>
                 <input 
                 ref = {(ref) => this.nameInput = ref}
                 name='name'
@@ -131,6 +171,7 @@ export default connect(mapStateToProps, mapDispatchToProps)
                 disabled={disabled}
                 onClick={this.submitHandler}/>
             </form>
+        </>
         )
     }
 })

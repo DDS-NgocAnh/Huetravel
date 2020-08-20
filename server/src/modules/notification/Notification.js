@@ -8,10 +8,13 @@ const notificationSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'    
     },
+    isSeen: {
+        type: Boolean,
+        default: false
+    },
     comment: {
         type: Schema.Types.ObjectId,
         ref: 'Comment',
-        required: true
     },
     status: {
         type: String,
@@ -26,6 +29,14 @@ const notificationSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'User'
     },
+    rock: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    flower: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     post: {
         type: Schema.Types.ObjectId,
         ref: 'Post',
@@ -33,7 +44,8 @@ const notificationSchema = new Schema({
     },
     date: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.now
     }
 })
 

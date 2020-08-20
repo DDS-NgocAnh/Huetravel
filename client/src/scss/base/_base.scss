@@ -28,7 +28,6 @@ button, a, img, input {
     }
 }
 
-
 a {
     text-decoration: none;
     color: $color-primary;
@@ -54,4 +53,8 @@ button:disabled {
         background-color: $color-grey-light-4;
         color: $color-primary;
     }
+}
+
+button.toggle-btn__btn:disabled {
+    background-color: transparent;
 }

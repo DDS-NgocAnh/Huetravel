@@ -1,12 +1,23 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import axios from 'axios'
 
 import { inputHandler, validateName } from '../../utils' 
 
-export default class NameChangeForm extends Component {
+const mapStateToProps = (state) => {
+    return {
+        currentUser: state.currentUser.userData
+    }
+}
+
+export default connect(mapStateToProps)
+(withRouter(class NameChangeForm extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
+            userId: props.match.params.userId,
             userNameInitial: 'Ngoc Anh Nguyen',
             userName: 'Ngoc Anh Nguyen',
             placeholder: '',
@@ -46,6 +57,18 @@ export default class NameChangeForm extends Component {
                 btnDisabled: 'disabled',
                 isDisabled: !this.state.isDisabled
             })
+
+            let newName = {
+                name: userName
+            }
+
+            axios.post(
+                'http:localhost:9000/api/change-name',
+                newName
+            ).then(res => {
+
+                }
+            )
         }
     }
 
@@ -53,9 +76,12 @@ export default class NameChangeForm extends Component {
         let { isDisabled, userName,
             userNameInitial, btnChange,
             isVisibled, btnDisabled,
-            inputStyle, placeholder
+            inputStyle, placeholder,
+            userId
          } = this.state
 
+        let isCurrentUser = userId == this.props.currentUser.id ?
+        true: false
 
         let disabled = isDisabled ? 'disabled' : ''
 
@@ -82,12 +108,15 @@ export default class NameChangeForm extends Component {
                     />
                 )}
             </form>
-            <button
-            className='btn-page-control u-margin-right-tiny'
-            onClick={this.changeHandler}
-            disabled={btnDisabled}
-            >{btnChange}</button>
-            {isVisibled && (
+            {isCurrentUser && (
+                <button
+                className='btn-page-control u-margin-right-tiny'
+                onClick={this.changeHandler}
+                disabled={btnDisabled}
+                >{btnChange}</button>
+
+                )}
+            {isCurrentUser && isVisibled && (
                 <button
                 type='submit'
                 className='btn-page-control'
@@ -95,8 +124,7 @@ export default class NameChangeForm extends Component {
                 disabled={btnDisabled}
                 >Change</button>
             )}
-            
         </div> 
         )
     }
-}
+}))

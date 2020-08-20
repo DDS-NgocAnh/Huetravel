@@ -1,3 +1,8 @@
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
+
 function trimValue(value) {
     return value ? value.trim() : value
 }
@@ -131,17 +136,133 @@ function validateEmail(value, inputId, styleError) {
 }
 
 function validateBlank(value, inputId) {
-    let { isBlank, isMax20Char } = inputNameHandler(value)
-    let { inputStyle } = this.state
+    let { isBlank } = inputNameHandler(value)
     let result = false
 
-        if(isBlank) {
-            this[inputId].value = ''
-            this[inputId].placeholder = this[inputId].placeholder
-        } else {
-            result = true
-        }
+    if(isBlank) {
+        this[inputId].value = ''
+        this[inputId].placeholder = this[inputId].placeholder
+    } else {
+        result = true
+    }
     return result
+}
+
+function setAuthToken(token) {
+    axios.defaults.headers.common['Authorization'] = token
+}
+
+function removeAuthToken() {
+    delete axios.defaults.headers.common['Authorization']
+}
+
+function getFormatedDate(date) {
+    const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+      ]
+
+    date = new Date(date)
+
+    let monthIndex = date.getMonth()
+    let monthName = months[monthIndex]
+
+    let year = date.getFullYear()
+    let dates = date.getDate()
+
+    let hours = date.getHours()
+    let minutes = date.getMinutes() 
+
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12
+    hours = hours ? hours : 12
+    minutes = minutes < 10 ? '0'+ minutes : minutes
+    let strTime = hours + ':' + minutes + ' ' + ampm;
+
+    let formattedDate = `${strTime} | ${monthName} ${dates}, ${year}`
+    return formattedDate
+}
+
+function isUserInArr(arr, id) {
+    const isExist = arr.some(el => el.user === id);
+    return isExist;
+  }
+
+function bookmark(postId) {
+    if(this.props.isLoggedIn) {
+        let { isBookmark } = this.state
+        let style = isBookmark == 'bookmark--unnoted' ? 
+        'bookmark--noted' : 'bookmark--unnoted'
+        this.setState({ isBookmark: style })
+
+        axios.post(
+        `http://localhost:9000/api/post/note/${postId}`
+        ).then(res => {
+        this.setState({ noteMessage: res.data.message })
+        })
+        .catch(err => {
+        let errorMessage = err.message || err.response.data.message
+        this.setState({ errorMessage })
+        })
+    } else {
+        this.props.onOpen()
+    }
+}
+
+function react(reactIcon, postId) {
+    if(this.props.isLoggedIn) {
+        let toggleIcon = reactIcon == 'flowers' ? 'rocks' : 'flowers'
+        let style = this.state[reactIcon] == 'react--none' ? 
+        'react--reacted' : 'react--none'
+        let toggleStyle = style == 'react--none' ? 'react--reacted' : 'react--none'
+        this.setState({ [reactIcon]: style})
+
+        if(this.state[reactIcon] != 'react--reacted') {
+            this.setState({[toggleIcon]: toggleStyle })
+        }
+
+        axios.post(
+        `http://localhost:9000/api/post/react/${reactIcon}/${postId}`
+        ).then(res => {
+        this.setState({ successMessage: res.data.message })
+        })
+        .catch(err => {
+        let errorMessage = err.message || err.response.data.message
+        this.setState({ errorMessage })
+        })
+    } else {
+        this.props.onOpen()
+    }
+}
+
+function toastNoti(nextState) {
+    if(nextState.successMessage) {
+        toast(nextState.successMessage)
+        nextState.successMessage = ''
+    }
+    if(nextState.noteMessage) {
+        toast(nextState.noteMessage)
+        nextState.noteMessage = ''
+    }
+    if(nextState.errorMessage) {
+        toast.error(nextState.errorMessage)
+        nextState.errorMessage = ''
+    } 
+    if(nextState.updateMessage) {
+        toast(nextState.updateMessage)
+        nextState.updateMessage = ''
+    } 
 }
 
 export {
@@ -154,5 +275,12 @@ export {
     validatePwd,
     validateName,
     validateEmail,
-    validateBlank
+    validateBlank,
+    setAuthToken,
+    removeAuthToken,
+    getFormatedDate,
+    isUserInArr,
+    bookmark,
+    react,
+    toastNoti
 }

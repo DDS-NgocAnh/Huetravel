@@ -12,8 +12,7 @@ router.post('/login', handlers.login)
 router.post('/change-password', authenticate, handlers.changePassword)
 router.post('/reset-password', authenticate, handlers.resetPassword)
 router.post('/change-name', authenticate, handlers.changeName)
-
-// router.post('/logout', handlers.authenticatedMiddleware, handlers.logout)
+router.post('/change-avatar', authenticate, handlers.changeAvatar)
 
 
 //devOnly 

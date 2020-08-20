@@ -1,5 +1,5 @@
 .btn-primary {
-    @include default-btn(2.8rem, 8px, $color-primary, $color-white, none, center);
+    @include default-btn(2.8rem, 8px, $color-primary, $color-white, none, $text-align: center);
     display: inline-block;
     line-height: 2.8rem;
     padding-left: 2.8rem;
@@ -16,13 +16,14 @@
 }
 
 .btn-transparent {
-    @include default-btn(3.3rem, 0, none, $color-primary, none, center);
+    @include default-btn(3.3rem, 0, none, $color-primary, none, $text-align: center);
     display: inline-block;
     line-height: 2.8rem;
 
-    &:hover + &--current {
-        border-bottom: none !important;
-    }
+    // &:hover ~ &--current, 
+    // &:hover + &--current {
+    //     border-bottom: none !important;
+    // }
     
     &:hover, 
     &--current {
@@ -36,6 +37,7 @@
     }
 
     &--white {
+
         color: $color-white;
     }
 }

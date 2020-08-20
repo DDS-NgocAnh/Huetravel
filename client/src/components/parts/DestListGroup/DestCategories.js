@@ -5,25 +5,30 @@ export default class DestCategories extends Component {
         super(props)
 
         this.state = {
-            category: '',
+            category: 'all',
         }
         this.inputHandler = this.inputHandler.bind(this);
     }
 
     inputHandler(event) {
-        const target = event.target
-        const { name, value } = target
-        this.setState({
-            [name] : value
-        })
+        if (this.props.onChange instanceof Function) {
+            let value = event.target.value
+            this.props.onChange(value)
+        }
     }
 
     render() {
+        let result = this.props.count > 1 ? ' results' : ' result'
+        let totalPosts = this.props.count + result
         return (
             <>
             <div className='dest-categories' onChange={this.inputHandler}>
                 <div className='input-radio input-radio--text'>
-                    <input id='block-attraction' type='radio' name='category' value='attraction' defaultChecked='true'/>
+                    <input id='block-all' type='radio' name='category' value='all' defaultChecked='true'/>
+                    <label htmlFor='block-all'>All</label>
+                </div>
+                <div className='input-radio input-radio--text'>
+                    <input id='block-attraction' type='radio' name='category' value='attraction'/>
                     <label htmlFor='block-attraction'>Attractions</label>
                 </div>
                 <div className='input-radio input-radio--text'>
@@ -41,7 +46,7 @@ export default class DestCategories extends Component {
                 <div className='underline'></div> 
             </div>
             <div className='dest-results'>
-                <span className='u-text-bold'>1.238 results</span>
+                <span className='u-text-bold'>{totalPosts}</span>
             </div>
             </>
         )

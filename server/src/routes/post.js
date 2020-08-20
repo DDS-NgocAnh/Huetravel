@@ -8,6 +8,10 @@ const authenticate = passport.authenticate('jwt', {session: false})
 
 router.get('/:postId', handlers.getPost)
 
+router.put('/:postId', authenticate, handlers.updatePost)
+
+router.get('/all/top-3-posts', handlers.getTop3Posts)
+
 router.get('/all/:category/', handlers.getCategoryPosts)
 
 router.get('/user/:userId/:category/', handlers.getUserPosts)

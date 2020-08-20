@@ -7,8 +7,8 @@ const config = {
     toolbar: ['bold', 'italic', 'imageUpload',
     'bulletedList', 'numberedList', 'blockQuote'],
     ckfinder: {
-        uploadUrl: 'http://localhost:9000/uploads'
-    }
+        uploadUrl: 'http://localhost:9000/api/upload/ckfinder',
+    },
 }
 
 
@@ -23,6 +23,15 @@ export default class TextEditor extends Component {
         this.ckEditorHandler = this.ckEditorHandler.bind(this)
     }
 
+    UNSAFE_componentWillUpdate(nextProps, nextState) {
+        let oldProps = this.props
+        if(nextProps.reset && nextProps.reset != oldProps.reset) {
+            this.setState({
+                content: ''
+            })
+        }
+    }
+
     ckEditorHandler(event, editor) {
         const data = editor.getData()
         this.setState({ content: data.trim() }, () => {
@@ -33,13 +42,20 @@ export default class TextEditor extends Component {
     }
 
     render() {
+        let { content } = this.state
+        if(!this.props.reset) {
+            content = this.props.content || this.state.content
+        }
         return (
             <CKEditor
             config={config}
             editor={ClassicEditor} 
-            data={this.state.content}
+            data={content}
             disabled= {this.props.disabled}
             onInit= { editor => {
+                if(content) {
+                    editor.setData(content)
+                }
             }}
             onChange={this.ckEditorHandler}
             />
