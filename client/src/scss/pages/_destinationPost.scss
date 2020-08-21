@@ -23,6 +23,14 @@
             & * {
                 max-width: 100%;
             }
+
+            & figcaption {
+                margin-top: .4rem;
+                margin-bottom: .4rem;
+                text-align: center;
+                font-size: 1.2rem;
+                font-style: italic;;
+            }
         }
         &__edit-group-btn {
             display: flex;

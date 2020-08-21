@@ -2,12 +2,14 @@
 export const OPEN_POPUP = 'OPEN_POPUP'
 export const CLOSE_POPUP = 'CLOSE_POPUP'
 export const OPEN_POPUP_LOGIN = 'OPEN_POPUP_LOGIN'
+export const OPEN_POPUP_RESET = 'OPEN_POPUP_RESET'
 export const OPEN_POPUP_REGISTER = 'OPEN_POPUP_REGISTER'
 export const POPUP_SUBMIT = 'POPUP_SUBMIT'
 export const POPUP_SUBMIT_DONE = 'POPUP_SUBMIT_DONE'
 
 //Auth
 export const LOGOUT = 'LOGOUT'
+export const CHANGE_AVATAR = 'CHANGE_AVATAR'
 export const SET_CURRENT_USER = 'SET_CURRENT_USER'
 
 //Update Post

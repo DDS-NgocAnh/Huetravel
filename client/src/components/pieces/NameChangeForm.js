@@ -1,25 +1,19 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import axios from 'axios'
+import 'react-toastify/dist/ReactToastify.css'
 
-import { inputHandler, validateName } from '../../utils' 
 
-const mapStateToProps = (state) => {
-    return {
-        currentUser: state.currentUser.userData
-    }
-}
+import { validateName, trimValue, toastNoti } from '../../utils' 
 
-export default connect(mapStateToProps)
-(withRouter(class NameChangeForm extends Component {
+export default 
+withRouter(class NameChangeForm extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
             userId: props.match.params.userId,
-            userNameInitial: 'Ngoc Anh Nguyen',
-            userName: 'Ngoc Anh Nguyen',
+            userName: '',
             placeholder: '',
             isVisibled: false,
             isDisabled: true,
@@ -30,58 +24,86 @@ export default connect(mapStateToProps)
 
         this.changeHandler = this.changeHandler.bind(this)
         this.submitHandler = this.submitHandler.bind(this)
-        this.inputHandler = inputHandler.bind(this)
         this.validateName = validateName.bind(this)
+        this.toastNoti = toastNoti.bind(this)
+        this.trimValue = trimValue.bind(this)
+        this.inputHandler = this.inputHandler.bind(this)
     }
 
-    changeHandler(event) {
+    UNSAFE_componentWillUpdate(nextProps, nextState) {
+        let oldState = this.state
+        if(nextProps.userName && !oldState.userName) {
+            nextState.userName = nextProps.userName
+            nextState.userNameInitial = nextProps.userName
+        }
+        this.toastNoti(nextState)
+    }
+
+    inputHandler(event) {
         event.preventDefault()
+        let { name, value } = event.target
+
+        this.setState({
+            [name]: value
+        })
+    }
+
+    changeHandler() {
         let btnChange = this.state.btnChange == 'Change' ?
         'Later' : 'Change'
         this.setState({
             isVisibled: !this.state.isVisibled,
             btnChange: btnChange,   
-            isDisabled: !this.state.isDisabled,
-            userNameInitial: this.state.userNameInitial,
-            userName: this.state.userNameInitial,
+            isDisabled: !this.state.isDisabled
         })
     }
 
     submitHandler(event) {
         event.preventDefault()
         let { userName } = this.state
+        let errorStyle = 'input u-margin-bottom-tiny input--error'
 
-        let check1 = this.validateName(userName, 'nameInput', 'input--error')
+        let check1 = this.validateName(userName, 'nameInput', errorStyle)
         if(check1) {
             this.setState({
                 btnDisabled: 'disabled',
-                isDisabled: !this.state.isDisabled
+                isDisabled: true
             })
 
             let newName = {
-                name: userName
+                name: trimValue(userName)
             }
 
             axios.post(
-                'http:localhost:9000/api/change-name',
+                'http://localhost:9000/api/user/change-name',
                 newName
             ).then(res => {
-
-                }
+                this.setState({successMessage: res.data.message})
+            }
+            ).catch(err => {
+                this.setState({errorMessage: err.message || err.response.data.message})
+            })
+            .finally(
+                this.setState({
+                    btnDisabled: '',
+                    isDisabled: true,
+                    isVisibled: false,
+                    btnChange: 'Change',
+                    inputStyle: 'input u-margin-bottom-tiny ' 
+                })
             )
         }
     }
 
     render() {
         let { isDisabled, userName,
-            userNameInitial, btnChange,
+            btnChange,
             isVisibled, btnDisabled,
             inputStyle, placeholder,
             userId
          } = this.state
 
-        let isCurrentUser = userId == this.props.currentUser.id ?
-        true: false
+        let isCurrentUser = this.props.isCurrentUser
 
         let disabled = isDisabled ? 'disabled' : ''
 
@@ -92,8 +114,9 @@ export default connect(mapStateToProps)
                 {!isVisibled && (
                     <input name='userName' 
                     className='input input--primary u-margin-bottom-tiny' 
-                    value={userNameInitial}
+                    defaultValue={userName}
                     disabled={disabled}
+                    onChange={this.inputHandler}
                     />
                 )}
                 {isVisibled && (
@@ -110,16 +133,15 @@ export default connect(mapStateToProps)
             </form>
             {isCurrentUser && (
                 <button
-                className='btn-page-control u-margin-right-tiny'
+                className='btn-page-control u-margin-right-tiny u-margin-top-small'
                 onClick={this.changeHandler}
                 disabled={btnDisabled}
                 >{btnChange}</button>
-
-                )}
+            )}
             {isCurrentUser && isVisibled && (
                 <button
                 type='submit'
-                className='btn-page-control'
+                className='btn-page-control u-margin-top-small'
                 onClick={this.submitHandler}
                 disabled={btnDisabled}
                 >Change</button>
@@ -127,4 +149,4 @@ export default connect(mapStateToProps)
         </div> 
         )
     }
-}))
+})

@@ -10,6 +10,7 @@ import rockIcon from '../../../assets/icons/rock.png'
 
 import { react, isUserInArr, toastNoti } from '../../../utils'
 import * as actionTypes from '../../../store/actions/actionTypes'
+import anonymousAvatar from '../../../assets/img/avatar-default.png'
 
 const mapStateToProps = (state) => {
     return {

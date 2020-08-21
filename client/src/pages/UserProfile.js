@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
 import axios from 'axios'
 
 import CFileUpload from '../components/pieces/FileUpload'
@@ -9,8 +10,16 @@ import CPwdChangeForm from '../components/pieces/PwdChangeForm'
 
 import CSlick from '../components/pieces/Slick'
 
-export default 
-withRouter(class Userprofile extends Component {
+
+const mapStateToProps = (state) => {
+    return {
+        currentUser: state.currentUser.userData
+    }
+}
+
+
+export default connect(mapStateToProps)
+(withRouter(class Userprofile extends Component {
     constructor(props) {
         super(props)
 
@@ -44,20 +53,35 @@ withRouter(class Userprofile extends Component {
     }
 
     render() {
-        let { user } = this.state
+        let { user, userId } = this.state
+        let isCurrentUser = userId == this.props.currentUser.id ?
+        true: false
+
         return (
             <section className='section-user-profile u-margin-horizontal-5'>
                 <div className='user__info u-margin-bottom-medium'>
-                    <CFileUpload
-                    defaultImg={user.avatar}
-                    className='user__avatar' 
-                    />
+                    {isCurrentUser && (
+                        <CFileUpload
+                        isCurrentUser={isCurrentUser}
+                        defaultImg={user.avatar}
+                        className='user__avatar' 
+                        />
+                    )}
+                    {!isCurrentUser && (
+                    <div className='photo-upload'>
+                        <img src={user.avatar} className='photo-upload__photo' alt='Photo'></img> 
+                    </div>
+                    )}
                     <CNameChangeForm
+                    isCurrentUser={isCurrentUser}
+                    userName = {user.name}
                      />
                     <CAssets
                     flowers={user.flowersTotal}
                     rocks={user.rocksTotal}/>
-                    <CPwdChangeForm />
+                    {isCurrentUser && (
+                        <CPwdChangeForm />
+                    )}
                 </div>
                 <div className='user__posts'>
                     <CSlick 
@@ -70,4 +94,4 @@ withRouter(class Userprofile extends Component {
             </section>
         )
     }
-})
+}))

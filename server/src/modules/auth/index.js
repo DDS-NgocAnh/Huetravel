@@ -191,13 +191,18 @@ const handlers = {
 
     async changePassword(req, res, next) {
         try {
-            let { newPassword } = req.body.newPassword
+            let { newPassword, currentPassword } = req.body
 
             let hashedNewPassword = hashMd5(String(newPassword))
-            await User.updateOne({ _id: req.user.id }, { password: hashedNewPassword })
+            let hashedCurrentPassword = hashMd5(String(currentPassword))
 
-            res.json({ message: 'Password was changed successfully'})
-         
+            let user = await User.findById(req.user.id)
+            if(user.password != hashedCurrentPassword) {
+                throw new Error('Your current password is incorrect')
+            } else {
+                await User.updateOne({ _id: req.user.id }, { $set: {password: hashedNewPassword }})
+                res.json({ message: 'Password was changed successfully'})
+            }
         } catch (error) {
             next(error)
         }
@@ -218,8 +223,8 @@ const handlers = {
                 if(err) {
                     next(err)
                 } else {
-                    await User.updateOne({ email: email }, { password: hashedPassword })
-                    res.send({ "message": 'Success! Your new password has been sent to your email' })
+                    await User.updateOne({ email: email }, { $set: {password: hashedPassword} })
+                    res.send({ "message": 'Success! Please check your email' })
                 }
             })
         } catch (error) {
@@ -230,7 +235,8 @@ const handlers = {
     async changeName(req, res, next) {
         try {
             let newName = req.body.name
-            await User.updateOne({ _id: req.user.id }, { name: newName })
+            await User.updateOne({ _id: req.user.id }, 
+            {$set: { name: newName }})
 
             res.json({ message: 'Name was changed successfully'})
 
@@ -242,7 +248,7 @@ const handlers = {
     async changeAvatar(req, res, next) {
         try {
             let newAvatar = req.body.avatar
-            await User.updateOne({ _id: req.user.id }, { avatar: newAvatar })
+            await User.updateOne({ _id: req.user.id }, { $set: {avatar: newAvatar }})
 
             res.json({ message: 'Avatar was changed successfully'})
 

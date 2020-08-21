@@ -62,7 +62,7 @@ export default connect(mapStateToProps, mapDisPatchToProps)
         event.preventDefault()
 
         let { name, email, password, passwordCheck } = this.state
-        let errorStyle = 'input-border--error'
+        let errorStyle = 'input-border input-border--error'
 
         let check1 = this.validateName(name, 'nameInput', errorStyle)
         let check2 = this.validateEmail(email, 'emailInput', errorStyle)
@@ -106,6 +106,7 @@ export default connect(mapStateToProps, mapDisPatchToProps)
                     this.form.reset()
                     this.setState({
                         isDisabled: false,
+                        inputStyle: 'input-border ' 
                     })
               })
 

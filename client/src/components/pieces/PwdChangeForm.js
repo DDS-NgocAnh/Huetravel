@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 
 import {
-    inputHandler,
     checkMatchPwd,
-    validatePwd } from '../../utils' 
+    validatePwd, 
+    toastNoti } from '../../utils' 
+
+import 'react-toastify/dist/ReactToastify.css'
+import axios from 'axios'
 
 export default class PwdChangeForm extends Component {
     constructor(props) {
@@ -20,42 +23,81 @@ export default class PwdChangeForm extends Component {
 
         this.changeHandler = this.changeHandler.bind(this)
         this.submitHandler = this.submitHandler.bind(this)
-
-        this.inputHandler = inputHandler.bind(this)
+        this.inputHandler = this.inputHandler.bind(this)
+        this.toastNoti = toastNoti.bind(this)
         this.validatePwd = validatePwd.bind(this)
         this.checkMatchPwd = checkMatchPwd.bind(this)
     }
 
-    changeHandler(event) {
+    UNSAFE_componentWillUpdate(nextProps, nextState) {
+        this.toastNoti(nextState)
+    }
+
+    inputHandler(event) {
         event.preventDefault()
+        let { name, value } = event.target
+
+        this.setState({
+            [name]: value
+        })
+    }
+
+    changeHandler() {
         let btnChange = this.state.btnChange == 'Change' ?
         'Later' : 'Change'
         this.setState({
             isVisibled: !this.state.isVisibled,
             btnChange: btnChange,
             placeholder: '',
+            inputStyle: 'input u-margin-bottom-tiny '
         })
     }
 
     submitHandler(event) {
         event.preventDefault()
-        let { currentPwd, checkCurrentPwd, newPwd } = this.state
-        let errorStyle = 'input--error'
+        let { currentPassword, checkNewPassword, newPassword } = this.state
+        let errorStyle = 'input u-margin-bottom-tiny input--error'
 
-        let check1 = this.validatePwd(currentPwd, 'currentPwd', errorStyle)
-        let check2 = this.validatePwd(checkCurrentPwd, 'checkCurrentPwd', errorStyle)
-        let check3 = this.validatePwd(newPwd, 'newPwd', errorStyle)
+        let check1 = this.validatePwd(currentPassword, 'currentPwd', errorStyle)
+        let check2 = this.validatePwd(checkNewPassword, 'checkNewPassword', errorStyle)
+        let check3 = this.validatePwd(newPassword, 'newPwd', errorStyle)
         let check4 = false
 
-        if(check1 && check2) {
-            check4 = this.checkMatchPwd(currentPwd, 'currentPwd', 
-            checkCurrentPwd, 'checkCurrentPwd', errorStyle)
+        if(check2 && check3) {
+            check4 = this.checkMatchPwd(newPassword, 'newPwd', 
+            checkNewPassword, 'checkNewPassword', errorStyle)
         }
 
         if (check1 && check2 && check3 && check4) {
             this.setState({
                 btnDisabled: 'disabled',
                 isDisabled: !this.state.isDisabled,
+            })
+
+            let newPassword = {
+                currentPassword: this.state.currentPassword,
+                newPassword: this.state.newPassword
+            }
+
+            axios.post(
+                'http://localhost:9000/api/user/change-password',
+                newPassword
+            ).then(res => {
+                this.setState({
+                    successMessage: res.data.message,
+                    btnDisabled: '',
+                    isDisabled: false,
+                    isVisibled: false,
+                    btnChange: 'Change',
+                    inputStyle: 'input u-margin-bottom-tiny '
+                })
+            }).catch(err => {
+                this.setState({
+                    errorMessage: err.response.data.message,
+                    btnDisabled: '',
+                    isDisabled: false,
+                    inputStyle: 'input u-margin-bottom-tiny input--error'
+                })
             })
         }
     }
@@ -77,27 +119,27 @@ export default class PwdChangeForm extends Component {
                         <input
                         ref={(ref) => this.currentPwd= ref}
                         type='password' 
-                        name='currentPwd' 
+                        name='currentPassword' 
                         className={inputStyle}
                         onChange={this.inputHandler}
                         disabled={disabled}
                         placeholder={placeholder || 'Currrent password'}/>
 
                         <input
-                        ref={(ref) => this.checkCurrentPwd= ref}
+                        ref={(ref) => this.newPwd= ref}
                         type='password' 
-                        name='checkCurrentPwd' 
+                        name='newPassword' 
                         className={inputStyle}
-                        placeholder={placeholder || 'Currrent password confirmation'}
+                        placeholder={placeholder || 'New password'}
                         disabled={disabled}
                         onChange={this.inputHandler}/>
 
                         <input
-                        ref={(ref) => this.newPwd= ref}
+                        ref={(ref) => this.checkNewPassword= ref}
                         type='password' 
-                        name='newPwd' 
+                        name='checkNewPassword' 
                         className={inputStyle}
-                        placeholder={placeholder || 'New password'}
+                        placeholder={placeholder || 'New password confirmation'}
                         disabled={disabled}
                         onChange={this.inputHandler}/>
                     </> 
@@ -105,14 +147,14 @@ export default class PwdChangeForm extends Component {
                 </div>
             </form>
             <button
-            className='btn-page-control u-margin-right-tiny'
+            className='btn-page-control u-margin-right-tiny u-margin-top-small'
             onClick={this.changeHandler}
             disabled={btnDisabled}
             >{btnChange}</button>
             {isVisibled && (
                 <button
                 type='submit'
-                className='btn-page-control'
+                className='btn-page-control u-margin-top-small'
                 onClick={this.submitHandler}
                 disabled={btnDisabled}
                 >Change</button>

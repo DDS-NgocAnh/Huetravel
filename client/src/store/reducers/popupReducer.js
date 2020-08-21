@@ -4,7 +4,8 @@ const initialState = {
     isOpen: false,
     login: true,
     register: false,
-    isDisabled: false
+    isDisabled: false,
+    reset: false
 }
 
 export default function(state = initialState, action) {
@@ -37,14 +38,24 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 register: false,
-                login: true
+                login: true,
+                reset: false,
+            }
+
+        case actionTypes.OPEN_POPUP_RESET:
+            return {
+                ...state,
+                register: false,
+                login: false,
+                reset: true,
             }
 
         case actionTypes.OPEN_POPUP_REGISTER:
             return {
                 ...state,
                 register: true,
-                login: false
+                login: false,
+                reset: false
             }
             
         default:

@@ -33,6 +33,15 @@ export default function(state = initialState, action) {
 
         case actionTypes.LOGOUT:
             return initialState
+        
+        case actionTypes.CHANGE_AVATAR:
+            return {
+                ...state,
+                userData: {
+                    ...state.userData,
+                    avatar: action.payload
+                }
+            }
 
         default:
             return state

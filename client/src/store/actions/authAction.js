@@ -1,4 +1,4 @@
-import { SET_CURRENT_USER, LOGOUT } from './actionTypes'
+import { SET_CURRENT_USER, LOGOUT, CHANGE_AVATAR } from './actionTypes'
 import { setAuthToken, removeAuthToken } from '../../utils'
 import jwt_decode from 'jwt-decode'
 
@@ -14,6 +14,13 @@ export const login = (token) => {
         return {
             type: SET_CURRENT_USER,
         }
+    }
+}
+
+export const changeAvatar = (avatar) => {
+    return {
+        type: CHANGE_AVATAR,
+        payload: avatar
     }
 }
 

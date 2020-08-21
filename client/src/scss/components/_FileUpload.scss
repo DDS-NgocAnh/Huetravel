@@ -2,6 +2,7 @@
     position: relative;
     width: 100%;
     height: 15rem;
+    border-radius: 8px;
 
     &__btn {
         @include default-btn(2.8rem, 8px, $color-white, $color-primary, none, center);

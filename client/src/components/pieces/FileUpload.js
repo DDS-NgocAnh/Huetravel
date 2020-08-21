@@ -1,8 +1,21 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import axios from 'axios'
+import { connect } from 'react-redux'
 
+import { toastNoti } from '../../utils' 
+import 'react-toastify/dist/ReactToastify.css'
 
-export default class FileUpload extends Component {
+import { changeAvatar } from '../../store/actions/authAction'
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onChangeAvatar: (avatar) => dispatch(changeAvatar(avatar))
+    }
+}
+
+export default connect(null,mapDispatchToProps)
+(withRouter(class FileUpload extends Component {
     constructor(props = {defaultImg}){
         super(props)
         this.state = {
@@ -10,6 +23,7 @@ export default class FileUpload extends Component {
             fileName: ''
         }
         this.fileSelectedHandler = this.fileSelectedHandler.bind(this)
+        this.toastNoti = toastNoti.bind(this)
     }
 
     UNSAFE_componentWillUpdate(nextProps, nextState) {
@@ -17,11 +31,15 @@ export default class FileUpload extends Component {
         if(nextProps.reset && nextProps.reset != oldProps.reset) {
             this.setState({filePath: ''})
         }
+        this.toastNoti(nextState)
     }  
 
     fileSelectedHandler(event) {
         const formData = new FormData()
         formData.append('file', event.target.files[0])
+
+        let isUserProfile = this.props.history.location.pathname == '/review' ?
+        false : true
 
         axios.post(
             'http://localhost:9000/api/upload/photo',
@@ -35,6 +53,23 @@ export default class FileUpload extends Component {
             if(this.props.onChange) {
                 this.props.onChange(filePath)
             }
+            if(isUserProfile) {
+                let avatar = filePath
+                let data = {
+                    avatar
+                }
+                axios.post(
+                    'http://localhost:9000/api/user/change-avatar',
+                    data
+                ).then(res => {
+                    this.props.onChangeAvatar(filePath)
+                    this.setState({successMessage: res.data.message})
+                }
+                ).catch(err => {
+                    console.log(err.message || err.response.data.message);
+                    this.setState({errorMessage: err.message || err.response.data.message})
+                })
+            }
         }).catch(err => {
             if(err) {
                 console.log(err.message);
@@ -47,6 +82,7 @@ export default class FileUpload extends Component {
 
     render() {
         let defaultImg = this.state.filePath ? this.state.filePath : this.props.defaultImg
+
         return (
             <div className='photo-upload'>
                 <input className='photo-upload__btn'
@@ -58,4 +94,4 @@ export default class FileUpload extends Component {
             </div>
         )
     }
-}
+}))

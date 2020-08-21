@@ -53,12 +53,10 @@ function inputHandler(event) {
 
 function  checkMatchPwd(value, valueId, checkValue, checkValueId, styleError) {
     let isEqual = value === checkValue ? true : false
-    let { inputStyle } = this.state
-    let error = inputStyle + styleError
     let result = false
 
     if(!isEqual) {
-        this[checkValueId].className = error
+        this[checkValueId].className = styleError
         this[checkValueId].value = ''
         this[checkValueId].placeholder = 'Does not match'
     } else {
@@ -72,16 +70,15 @@ function  checkMatchPwd(value, valueId, checkValue, checkValueId, styleError) {
 function validatePwd(value, inputId, styleError) {
     let { isBlank, isMin8Char } = inputPwdHandler(value)
     let { inputStyle } = this.state
-    let error = inputStyle + styleError
     let result = false
 
     if(isBlank) {
         this[inputId].value = ''
-        this[inputId].className = error
+        this[inputId].className = styleError
     } else if(!isMin8Char) {
         this[inputId].value = ''
         this[inputId].placeholder = "At least 8 characters"
-        this[inputId].className = error
+        this[inputId].className = styleError
     } else {
         this[inputId].className = inputStyle
         result = true
@@ -93,18 +90,17 @@ function validatePwd(value, inputId, styleError) {
 function validateName(value, inputId, styleError) {
     let { isBlank, isMax20Char } = inputNameHandler(value)
     let { inputStyle } = this.state
-    let error = inputStyle + styleError
     let result = false
 
         if(isBlank) {
             this[inputId].value = ''
-            this[inputId].placeholder = 'Name (Maximum 20 characters)'
-            this[inputId].className = error
+            this[inputId].className = styleError
         } else if(!isMax20Char) {
             this[inputId].value = ''
-            this[inputId].className = error
+            this[inputId].className = styleError
             this[inputId].placeholder = "Can't be over 20 characters"
         } else {
+            this[inputId].placeholder = 'Name (Maximum 20 characters)'
             this[inputId].className = inputStyle
             result = true
         }
@@ -114,7 +110,6 @@ function validateName(value, inputId, styleError) {
 function validateEmail(value, inputId, styleError) {
     let { isBlank } = inputNameHandler(value)
     let { inputStyle } = this.state
-    let error = inputStyle + styleError
     let result = false
     const regExp = RegExp(
         /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/
@@ -122,13 +117,14 @@ function validateEmail(value, inputId, styleError) {
 
         if(isBlank) {
             this[inputId].value = ''
-            this[inputId].className = error 
+            this[inputId].className = styleError
         } else if(!regExp.test(value)) {
             this[inputId].value = ''
             this[inputId].placeholder = "Invalid email address"
-            this[inputId].className = error 
+            this[inputId].className = styleError 
         }
         else {
+            this[inputId].placeholder = "Email"
             this[inputId].className = inputStyle
             result = true
         }

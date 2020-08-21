@@ -73,7 +73,7 @@ export default connect(mapStateToProps, mapDispatchToProps)
     changeHandler(data) {
         for(let value of Object.entries(data)) {
             this.setState({
-                [value[0]]: trimValue(value[1])
+                [value[0]]: value[1]
             })
         }
     }
@@ -114,11 +114,11 @@ export default connect(mapStateToProps, mapDispatchToProps)
             })
             let { name, address, content, avatar, category } = this.state
             let post = {
-                name: name,
-                address: address,
-                content: content,
-                avatar: avatar,
-                category: category
+                name: trimValue(name),
+                address: trimValue(address),
+                content: trimValue(content),
+                avatar: trimValue(avatar),
+                category: trimValue(category)
             }
 
             let url = 'http://localhost:9000/api/post/'

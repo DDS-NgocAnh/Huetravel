@@ -10,7 +10,7 @@ router.get('/confirm-email/:confirmId', handlers.confirmEmail)
 router.get('/:userId', handlers.getProfile)
 router.post('/login', handlers.login)
 router.post('/change-password', authenticate, handlers.changePassword)
-router.post('/reset-password', authenticate, handlers.resetPassword)
+router.post('/reset-password', handlers.resetPassword)
 router.post('/change-name', authenticate, handlers.changeName)
 router.post('/change-avatar', authenticate, handlers.changeAvatar)
 
