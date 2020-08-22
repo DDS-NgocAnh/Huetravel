@@ -3,7 +3,6 @@ require('./connect-mongo')
 const express = require('express')
 const bodyParser = require('body-parser')
 const http = require("http")
-const socketIo = require("socket.io")
 
 const passport = require('passport')
 
@@ -26,15 +25,7 @@ const PORT = process.env.PORT || 9000;
 const app = express();
 
 const server = http.createServer(app);
-const io = socketIo(server)
-
-io.on('connection', (socket) => {
-  console.log('We have a new connection!!!')
-
-  socket.on('disconnect', () => {
-    console.log('User has left!!!');
-  })
-});
+const io = require('./sockets').listen(server)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))

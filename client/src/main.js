@@ -9,6 +9,7 @@ import { setAuthToken } from './utils'
 import App from './App'
 import store from './store'
 
+
 if(localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken)
   store.dispatch(login(localStorage.jwtToken))

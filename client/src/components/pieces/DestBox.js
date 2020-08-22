@@ -18,7 +18,8 @@ const mapStateToProps = (state) => {
     return {
         isLoggedIn: state.currentUser.isLoggedIn,
         currentUser: state.currentUser.userData,
-        isOpen: state.popup.isOpen
+        isOpen: state.popup.isOpen,
+        socket: state.socket.socket
     }
 }
 
@@ -64,7 +65,7 @@ export default connect(mapStateToProps, mapDispatchToProps)
             <div className='dest-box'>
                 <div className='dest-box__bookmark'>
                     <Bookmark 
-                    onClick={() => this.bookmark(info._id)}
+                    onClick={() => this.bookmark(info._id, this.props.isUserProfile)}
                     className={isBookmark}
                     />
                 </div>

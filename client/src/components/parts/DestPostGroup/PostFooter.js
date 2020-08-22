@@ -62,27 +62,27 @@ export default connect(mapStateToProps, mapDispatchToProps)
       }
 
     renderLink() {
-    let { footer } = this.props;
+        let { footer } = this.props;
 
-    let avatar = footer.writer ? footer.writer.avatar : anonymousAvatar
-    let name = footer.writer ? footer.writer.name : "Anonymous";
-    let userProfileLink = footer.writer ? `/${footer.writer._id}` : ""
+        let avatar = footer.writer ? footer.writer.avatar : anonymousAvatar
+        let name = footer.writer ? footer.writer.name : "Anonymous";
+        let userProfileLink = footer.writer ? `/${footer.writer._id}` : ""
 
-    if (userProfileLink) {
-        return (
-        <Link to={userProfileLink} className='post-footer__writer-info'>
-            <img src={avatar} alt='Writer' className='post-footer__writer-photo'></img>
-            <span className='post-footer__writer-name'>{name}</span>
-        </Link>
-        );
-    } else {
-        return (
-        <div className='post-footer__writer-info'>
-            <img src={avatar} alt='Writer' className='post-footer__writer-photo'></img>
-            <span className='post-footer__writer-name'>{name}</span>
-        </div>
-        );
-    }
+        if (userProfileLink) {
+            return (
+            <Link to={userProfileLink} className='post-footer__writer-info'>
+                <img src={avatar} alt='Writer' className='post-footer__writer-photo'></img>
+                <span className='post-footer__writer-name'>{name}</span>
+            </Link>
+            );
+        } else {
+            return (
+            <div className='post-footer__writer-info'>
+                <img src={avatar} alt='Writer' className='post-footer__writer-photo'></img>
+                <span className='post-footer__writer-name'>{name}</span>
+            </div>
+            );
+        }
     }
     
     render() {

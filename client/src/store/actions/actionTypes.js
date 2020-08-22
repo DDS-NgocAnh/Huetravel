@@ -15,3 +15,6 @@ export const SET_CURRENT_USER = 'SET_CURRENT_USER'
 //Update Post
 export const UPDATE_START = 'UPDATE_START'
 export const UPDATE_DONE = 'UPDATE_DONE'
+
+//Socket
+export const CONNECT_SOCKET = 'CONNECT_SOCKET'

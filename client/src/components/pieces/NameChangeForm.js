@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom'
 import axios from 'axios'
 import 'react-toastify/dist/ReactToastify.css'
 
-
 import { validateName, trimValue, toastNoti } from '../../utils' 
 
 export default 
@@ -37,6 +36,14 @@ withRouter(class NameChangeForm extends Component {
             nextState.userNameInitial = nextProps.userName
         }
         this.toastNoti(nextState)
+
+        this.props.socket.on('getName', data => {
+            if(data.error) {
+                this.setState({errorMessage: data.error})
+            } else {
+                this.setState({userName: data.name})
+            }
+        })
     }
 
     inputHandler(event) {
@@ -78,7 +85,11 @@ withRouter(class NameChangeForm extends Component {
                 'http://localhost:9000/api/user/change-name',
                 newName
             ).then(res => {
-                this.setState({successMessage: res.data.message})
+                this.props.socket.emit('changeName', (this.props.userId))
+
+                this.setState({
+                    successMessage: res.data.message
+                })
             }
             ).catch(err => {
                 this.setState({errorMessage: err.message || err.response.data.message})
@@ -94,6 +105,7 @@ withRouter(class NameChangeForm extends Component {
             )
         }
     }
+
 
     render() {
         let { isDisabled, userName,

@@ -4,18 +4,21 @@ import React, { Component } from "react"
 import { Link, NavLink, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import * as actionTypes from '../../../store/actions/actionTypes'
-import { logout } from '../../../store/actions/authAction'
+import { logout, changeAvatar } from '../../../store/actions/authAction'
 
 import LoginPopup from '../Popup'
 
 import logOutIcon from '../../../assets/icons/logout.png'
 import logOutWhiteIcon from '../../../assets/icons/white-logout.png'
 
+import { toastNoti } from '../../../utils'
+
 const mapStateToProps = (state) => {
   return {
     isOpen: state.popup.isOpen,
     isLoggedIn: state.currentUser.isLoggedIn,
-    currentUser: state.currentUser.userData
+    currentUser: state.currentUser.userData,
+    socket: state.socket.socket,
   }
 }
 
@@ -24,7 +27,8 @@ const mapDispatchToProps = dispatch => {
     onOpen: () => dispatch({
       type: actionTypes.OPEN_POPUP
     }),
-    onLogout: () => dispatch(logout())
+    onLogout: () => dispatch(logout()),
+    onChangeAvatar: (avatar) => dispatch(changeAvatar(avatar))
   }
 }
 
@@ -33,8 +37,32 @@ export default connect(mapStateToProps, mapDispatchToProps)
   constructor(props) {
     super(props)
 
+    this.state = {
+      successMessage: '',
+      errorMessage: ''
+    }
+
     this.logout = this.logout.bind(this)
     this.goBack = this.goBack.bind(this)
+    this.toastNoti = toastNoti.bind(this)
+    this.getCurrentAvatar = this.getCurrentAvatar.bind(this)
+  }
+
+  componentDidMount() {
+    this.getCurrentAvatar(this.props.currentUser.id)
+  }
+
+  UNSAFE_componentWillUpdate(nextProps) {
+    if(nextProps.isLoggedIn && nextProps.isLoggedIn != this.props.isLoggedIn) {
+      this.getCurrentAvatar(nextProps.currentUser.id)
+    }
+  }
+
+  getCurrentAvatar(userId) {
+    this.props.socket.emit('getCurrentAvatar', userId)
+    this.props.socket.on('returnCurrentAvatar', data => {
+      this.props.onChangeAvatar(data.avatar)
+    })
   }
 
   logout() {

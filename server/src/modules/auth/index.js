@@ -130,13 +130,6 @@ const handlers = {
 
             let payload = {
                 id: user._id,
-                name: user.name,
-                avatar: user.avatar,
-                unSeenNotifications: user.notifications.length,
-                notes: user.notes,
-                reviews: user.reviews,
-                flowers: user.flowers,
-                rocks: user.rocks
             }
 
             let token = signToken(payload)
@@ -242,6 +235,55 @@ const handlers = {
 
         } catch (error) {
             next(error)
+        }
+    },
+
+    async getName(userId) {
+        try {
+            let user = await User.findById(userId)
+            return { name: user.name }
+        } catch (error) {
+            return { error: error}
+        }
+    },
+
+    async getAvatar(userId) {
+        try {
+            let user = await User.findById(userId)
+            return { avatar: user.avatar }
+        } catch (error) {
+            return { error: error}
+        }
+    },
+
+    async getReviews(userId) {
+        try {
+            let pathSelect = 'name address avatar rocksTotal flowersTotal notes'
+            
+            let user = await User.findById(userId)
+            .populate({path: 'reviews', model: 'Post', select: pathSelect})
+
+            
+            return { reviews: user.reviews }
+        } catch (error) {
+            return { error: error}
+        }
+    },
+
+    async getNotes(userId) {
+        try {
+            let pathSelect = 'name address avatar rocksTotal flowersTotal notes'
+
+            let user = await User.findById(userId)
+            .populate({ path: 'notes.post', model: 'Post', select: pathSelect,
+            populate: {path: 'notes', select: 'user._id'}})
+
+            let userData = user.toObject()
+            let notes = userData.notes.map(note => note.post)
+
+            return { notes: notes }
+        } catch (error) {
+            return { error: error}
         }
     },
 

@@ -6,6 +6,7 @@ export const login = (token) => {
     try {
         const decoded = jwt_decode(token)
         setAuthToken(token)
+
         return {
             type: SET_CURRENT_USER,
             payload: decoded

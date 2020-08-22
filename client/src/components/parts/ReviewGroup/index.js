@@ -18,7 +18,10 @@ import 'react-toastify/dist/ReactToastify.css'
 const mapStateToProps = (state) => {
     return {
         postData: state.postUpdate.postData,
-        isUpdate: state.postUpdate.isUpdate
+        isUpdate: state.postUpdate.isUpdate,
+        socket: state.socket.socket,
+        currentUser: state.currentUser.userData,
+        isLoggedIn: state.currentUser.isLoggedIn
     }
 }
 
@@ -136,6 +139,10 @@ export default connect(mapStateToProps, mapDispatchToProps)
               .then(res => {
                 let updateMessage = ''
                 let successMessage = ''
+
+                if(this.props.isLoggedIn) {
+                    this.props.socket.emit('createReview', this.props.currentUser.id)
+                }
 
                 if(this.props.isUpdate) {
                     updateMessage = res.data.message

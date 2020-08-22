@@ -18,7 +18,8 @@ const mapStateToProps = (state) => {
     return {
         isLoggedIn: state.currentUser.isLoggedIn,
         currentUser: state.currentUser.userData,
-        isOpen: state.popup.isOpen
+        isOpen: state.popup.isOpen,
+        socket: state.socket.socket
     }
 }
 
@@ -106,7 +107,7 @@ export default connect(mapStateToProps, mapDispatchToProps)
       <div className="post-header">
         <div className="post-header__bookmark">
             <Bookmark 
-          onClick={() => this.bookmark(header._id)}
+          onClick={() => this.bookmark(header._id, false)}
           className={isBookmark} />
         </div>
         <h1 className="post-header__title">{header.name}</h1>

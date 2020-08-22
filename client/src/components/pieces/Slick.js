@@ -33,7 +33,10 @@ withRouter(class Slick extends Component {
                     <div className='slick__content'> 
                         {posts.map( post => {
                             return (
-                                <CDestBox key={post._id} info={post}/>
+                                <CDestBox 
+                                isUserProfile={true}
+                                key={post._id} 
+                                info={post}/>
                             )
                         })
                         }      

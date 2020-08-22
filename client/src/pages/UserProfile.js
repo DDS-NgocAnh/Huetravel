@@ -11,9 +11,11 @@ import CPwdChangeForm from '../components/pieces/PwdChangeForm'
 import CSlick from '../components/pieces/Slick'
 
 
+
 const mapStateToProps = (state) => {
     return {
-        currentUser: state.currentUser.userData
+        currentUser: state.currentUser.userData,
+        socket: state.socket.socket
     }
 }
 
@@ -29,11 +31,33 @@ export default connect(mapStateToProps)
         }
 
         this.callApiUser = this.callApiUser.bind(this)
+        this.updateSocket = this.updateSocket.bind(this)
     }
 
     componentDidMount() {
         let state = this.state
         this.callApiUser(state)
+    }
+
+    UNSAFE_componentWillUpdate() {
+        this.updateSocket('getAvatar', 'avatar')
+        this.updateSocket('getNotes', 'notes')
+        this.updateSocket('getReviews', 'reviews')
+    }
+
+    updateSocket(socketName, updatedField) {
+        this.props.socket.on(socketName, data => {
+            if(data.error) {
+                this.setState({errorMessage: data.error})
+            } else {
+                this.setState({
+                    ...this.state,
+                    user: {
+                        ...this.state.user,
+                        [updatedField]: data[updatedField]
+                    }})
+            }
+        })
     }
 
     callApiUser(state) {
@@ -62,6 +86,8 @@ export default connect(mapStateToProps)
                 <div className='user__info u-margin-bottom-medium'>
                     {isCurrentUser && (
                         <CFileUpload
+                        socket={this.props.socket}
+                        userId={userId}
                         isCurrentUser={isCurrentUser}
                         defaultImg={user.avatar}
                         className='user__avatar' 
@@ -73,6 +99,8 @@ export default connect(mapStateToProps)
                     </div>
                     )}
                     <CNameChangeForm
+                    socket={this.props.socket}
+                    userId={userId}
                     isCurrentUser={isCurrentUser}
                     userName = {user.name}
                      />

@@ -4,7 +4,8 @@
     width: 70rem;
     margin: 0 auto;
 
-    & > *:not(:last-child, .delete-warning) {
+    & > *:not(.delete-warning),
+    & > *:not(:last-child) {
         border-bottom: 1px $color-grey-light-4 solid;
     }
 

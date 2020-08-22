@@ -221,10 +221,10 @@ const handlers = {
                                         notifications: notification._id,
                                     }})
                                 
-                                let message = reactIcon == 'flowers' ? 'Give a flower' : 'Throw a rock'
+                                }    
                                 
-                                res.json({message: message})
-                            }    
+                            let successMessage = reactIcon == 'flowers' ? 'Give a flower' : 'Throw a rock'
+                            res.json({message: successMessage})
                         }       
                     }
                 })

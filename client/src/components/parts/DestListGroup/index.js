@@ -41,7 +41,7 @@ withRouter(class DestListGroup extends Component {
         this.getCategoryPosts(state)
     }
 
-    componentWillUpdate(newProps, newState) {
+    UNSAFE_componentWillUpdate(newProps, newState) {
         let oldState = this.state
         let mustCallList = false
         let mustCallCount = false

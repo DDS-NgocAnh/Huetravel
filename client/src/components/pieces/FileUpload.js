@@ -4,7 +4,6 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 
 import { toastNoti } from '../../utils' 
-import 'react-toastify/dist/ReactToastify.css'
 
 import { changeAvatar } from '../../store/actions/authAction'
 
@@ -63,7 +62,8 @@ export default connect(null,mapDispatchToProps)
                     data
                 ).then(res => {
                     this.props.onChangeAvatar(filePath)
-                    this.setState({successMessage: res.data.message})
+                    this.props.socket.emit('changeAvatar', this.props.userId)
+                    this.setState({ successMessage: res.data.message})
                 }
                 ).catch(err => {
                     console.log(err.message || err.response.data.message);

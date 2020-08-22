@@ -2,19 +2,27 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import 'react-toastify/dist/ReactToastify.css'
+import io from 'socket.io-client'
+
 import { update } from '../../../store/actions/postAction'
+
 
 import CPostHeader from './PostHeader'
 import CPostFooter from './PostFooter'
+import CPostComment from './PostComment'
 
 import { toastNoti } from '../../../utils'
 
 import axios from 'axios'
 
+let socket 
+const ENDPOINT = 'localhost:9000'
+
 const mapStateToProps = (state) => {
     return {
         currentUser: state.currentUser.userData,
         userNotes: state.currentUser.notes,
+        socket: state.socket.socket
     }
 }
 
@@ -41,6 +49,10 @@ export default connect(mapStateToProps, mapDispatchToState)
     }
 
     componentDidMount() {
+        socket = io(ENDPOINT)
+
+        socket.emit()
+        
         this.callApiPost()
     }
 
@@ -66,6 +78,7 @@ export default connect(mapStateToProps, mapDispatchToState)
         axios.delete(
             `http://localhost:9000/api/post/${this.state.postId}`
         ).then(res => {
+            this.props.socket.emit('deletePost', this.props.currentUser.id)
             this.setState({
                 post: '', 
                 successMessage: res.data.message})
@@ -148,6 +161,7 @@ export default connect(mapStateToProps, mapDispatchToState)
                 footer={post}
                 postId={postId}
                 />     
+                <CPostComment/>
             </>
             )
         }}

@@ -4,14 +4,8 @@ const initialState = {
     isLoggedIn: false,
     userData: {
         id: '',
-        name: '',
         avatar: ''
     },
-    flowers: [],
-    rocks: [],
-    notes: [],
-    reviews: [],
-    unSeenNotifications: 0,
 }
 
 export default function(state = initialState, action) {
@@ -20,15 +14,9 @@ export default function(state = initialState, action) {
             return action.payload ? {
                 isLoggedIn: true,
                 userData: {
+                    ...state.userData,
                     id: action.payload.id,
-                    name: action.payload.name,
-                    avatar: action.payload.avatar
                 },
-                flowers: action.payload.flowers,
-                rocks: action.payload.rocks,
-                notes: action.payload.notes,
-                reviews: action.payload.reviews,
-                unSeenNotifications: action.payload.unSeenNotifications
             } : initialState
 
         case actionTypes.LOGOUT:

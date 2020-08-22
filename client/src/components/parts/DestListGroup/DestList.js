@@ -19,6 +19,7 @@ export default class Dest extends Component {
                 key={index}
                 fallback={<Loading/>}>
                     <CDestBox 
+                    isUserProfile={false}
                     info={post}/>            
                 </Suspense>
                 )

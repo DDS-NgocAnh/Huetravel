@@ -1,0 +1,18 @@
+.post-comment {
+    width: 100%;
+    height: fit-content;
+    border: none !important;
+
+    &__header {
+        height: 3.5rem;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
+
+    &__title {
+        font-size: 1.6rem;
+        margin-bottom: 1.5rem;
+        line-height: 3.5rem;
+    }
+}
