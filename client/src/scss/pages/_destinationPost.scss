@@ -43,6 +43,7 @@
         &__edit-group-btn {
             display: flex;
             justify-content: flex-end;
+            margin-top: 3rem;
 
             &>*:not(:last-child) {
                 margin-right: 1rem;

@@ -80,7 +80,7 @@ export default class PwdChangeForm extends Component {
             }
 
             axios.post(
-                '/api/user/change-password',
+                'http://localhost:9000/api/user/change-password',
                 newPassword
             ).then(res => {
                 this.setState({

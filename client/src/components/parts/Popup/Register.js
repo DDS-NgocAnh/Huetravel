@@ -89,7 +89,7 @@ export default connect(mapStateToProps, mapDisPatchToProps)
             }
 
             axios.request({
-                url: '/api/user/register',
+                url: 'http://localhost:9000/api/user/register',
                 method: 'POST',
                 data: newUser
               })

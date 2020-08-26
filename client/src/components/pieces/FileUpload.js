@@ -41,7 +41,7 @@ export default connect(null,mapDispatchToProps)
         false : true
 
         axios.post(
-            '/api/upload/photo',
+            'http://localhost:9000/api/upload/photo',
             formData,
             {headers: {
                 'Content-Type': 'multipart/form-data'
@@ -58,7 +58,7 @@ export default connect(null,mapDispatchToProps)
                     avatar
                 }
                 axios.post(
-                    '/api/user/change-avatar',
+                    'http://localhost:9000/api/user/change-avatar',
                     data
                 ).then(res => {
                     this.props.onChangeAvatar(filePath)
