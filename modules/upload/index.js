@@ -6,7 +6,7 @@ const handlers = {
         try {
             const file = req.files.upload
 
-            file.mv(`${__dirname}/client/public/uploads/${file.name}`, err => {
+            file.mv(`${__dirname}../../../client/public/uploads/${file.name}`, err => {
                 if(err) {
                     console.log(err);
                 }
@@ -37,7 +37,7 @@ const handlers = {
             }
 
             const file = req.files.file            
-            file.mv(`${__dirname}/client/public/uploads/${file.name}`, err => {
+            file.mv(`${__dirname}../../../client/public/uploads/${file.name}`, err => {
                 if(err) {
                     console.log(err);
                 }
