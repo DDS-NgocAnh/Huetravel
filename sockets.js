@@ -4,7 +4,7 @@ const postHandler = require('./modules/post')
 const commentHandler = require('./modules/comment')
 const notificationHandler = require('./modules/notification')
 
-const { setReactTotalAtPost, setReactTotalAtUser, cleanArray } = require('../src/modules/utils')
+const { setReactTotalAtPost, setReactTotalAtUser, cleanArray } = require('./modules/utils')
 
 module.exports.listen = function(server){
     const io = socketIo.listen(server)
