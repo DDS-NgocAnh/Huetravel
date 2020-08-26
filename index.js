@@ -1,64 +1,61 @@
-require('./connect-mongo')
+require("./connect-mongo");
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const http = require("http")
-const path = require('path')
+const express = require("express");
+const bodyParser = require("body-parser");
+const http = require("http");
+const path = require("path");
 
-const passport = require('passport')
+const passport = require("passport");
 
-const fileUpload = require('express-fileupload')
+const fileUpload = require("express-fileupload");
 
-const morgan = require('morgan')
+const morgan = require("morgan");
 
-const cors = require('./cors')
+const cors = require("./cors");
 
 //Import Routes
-const userRoutes = require('./routes/auth')
-const uploadRoutes = require('./routes/upload')
-const postRoutes = require('./routes/post')
+const userRoutes = require("./routes/auth");
+const uploadRoutes = require("./routes/upload");
+const postRoutes = require("./routes/post");
 
 const PORT = process.env.PORT || 9000;
 
 const app = express();
 
 const server = http.createServer(app);
-const io = require('./sockets').listen(server)
+const io = require("./sockets").listen(server);
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(fileUpload())
+app.use(fileUpload());
 //Passport Middleware
-app.use(passport.initialize())
+app.use(passport.initialize());
 
 //Passport Config
-require('./config-passport')(passport)
+require("./config-passport")(passport);
 
 //Import cors
-app.use(cors)
+app.use(cors);
 
 //Routes Middleware
-app.use('/api/user', userRoutes)
-app.use('/api/upload', uploadRoutes)
-app.use('/api/post', postRoutes)
+app.use("/api/user", userRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/post", postRoutes);
 
 app.use((err, req, res, next) => {
-    res.status(500)
-      .json({
-        message: err.message,
-        stack: err.stack
-      })
-})
+  res.status(500).json({
+    message: err.message,
+    stack: err.stack,
+  });
+});
 
-if(process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'client', 'build')))
+app.use(express.static(path.join(__dirname, "client", "build")));
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
-  })
-}
-    
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+});
+
 server.listen(PORT, (err) => {
-    console.log(err || `Server opend at port '${PORT}'`);
+  console.log(err || `Server opend at port '${PORT}'`);
 });
