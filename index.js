@@ -4,7 +4,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const http = require("http");
 const path = require("path");
-const serverStatic = require('server-static')
 const passport = require("passport");
 
 const fileUpload = require("express-fileupload");
@@ -43,21 +42,18 @@ app.use("/api/user", userRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/post", postRoutes);
 
+app.use(express.static('client/dist'));
+app.use('/public', express.static('client/public'))
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/dist/index.html'));
+});
+
 app.use((err, req, res, next) => {
   res.status(500).json({
     message: err.message,
     stack: err.stack,
   });
 });
-
-if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-  app.use(express.static('client/build'));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/build/index.html'));
-  });
-}
-
-
 
 server.listen(PORT, (err) => {
   console.log(err || `Server opend at port '${PORT}'`);

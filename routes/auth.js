@@ -15,7 +15,6 @@ router.post('/change-avatar', authenticate, handlers.changeAvatar)
 
 
 //devOnly 
-router.delete('/delete', handlers.deleteAll)
-// router.get('/', handlers.findAll)
+// router.delete('/delete', handlers.deleteAll)
 
 module.exports = router

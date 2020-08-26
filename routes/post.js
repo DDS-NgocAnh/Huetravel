@@ -21,7 +21,7 @@ router.delete('/:postId', authenticate, handlers.deletePost)
 router.post('/note/:postId', authenticate, handlers.notePost)
 
 //devOnly 
-// router.get('/', handlers.getAllPosts)
+
 // router.delete('/', handlers.deleteAllPosts)
 
 
