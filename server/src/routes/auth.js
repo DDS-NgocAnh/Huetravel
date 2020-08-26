@@ -7,7 +7,6 @@ const authenticate = passport.authenticate('jwt', {session: false})
 
 router.post('/register', handlers.register)
 router.get('/confirm-email/:confirmId', handlers.confirmEmail)
-router.get('/:userId', handlers.getProfile)
 router.post('/login', handlers.login)
 router.post('/change-password', authenticate, handlers.changePassword)
 router.post('/reset-password', handlers.resetPassword)
@@ -16,7 +15,7 @@ router.post('/change-avatar', authenticate, handlers.changeAvatar)
 
 
 //devOnly 
-router.delete('/delete', handlers.deleteAll)
-router.get('/', handlers.findAll)
+// router.delete('/delete', handlers.deleteAll)
+// router.get('/', handlers.findAll)
 
 module.exports = router

@@ -18,8 +18,8 @@ export default class Dropdown extends Component {
             <div className='dropdown'>
                 <span className='dropdown__title'>Sort by</span>
                 <select className="dropdown__content" onChange={this.inputHandler}>
-                    <option value="flowers" defaultValue={this.props.value}>Flower</option>
-                    <option value="rocks">Rock</option>
+                    <option value="flowersTotal" defaultValue={this.props.value}>Flower</option>
+                    <option value="rocksTotal">Rock</option>
                 </select>
             </div>
         )

@@ -15,4 +15,9 @@
         margin-bottom: 1.5rem;
         line-height: 3.5rem;
     }
+
+    &__content {
+        width: 100%;
+        height: fit-content;
+    }
 }

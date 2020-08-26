@@ -1,16 +1,40 @@
-.input-comment, .input-reply {
-    display: flex;
-    margin-bottom: .8rem;
-    .comment-avatar {
-        margin-top: .4rem;
-        width: 3rem;
-        height: 3rem;
-        object-fit: cover;
-        border-radius: 5px;
-        margin-right: .6rem;
-    }
+.input-comment,
+.input-reply {
+  display: flex;
+  margin-bottom: 0.8rem;
+  .comment-avatar {
+    margin-top: 0.4rem;
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 0.6rem;
+  }
 }
 
 .input-reply {
-    margin-left: 3.6rem;
+  margin-left: 3.6rem;
+}
+
+.textarea {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px $color-grey-light-2 solid;
+  outline: none;
+
+  &:active,
+  &:focus,
+  &:hover {
+    outline: none;
+  }
+
+  font-family: "Open Sans", sans-serif;
+  padding: 1.1rem 1.5rem !important;
+}
+
+.textarea--error {
+  border: 1px $color-red solid !important;
+  &::placeholder {
+    color: $color-red;
+  }
 }

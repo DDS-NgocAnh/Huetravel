@@ -3,6 +3,7 @@ require('./connect-mongo')
 const express = require('express')
 const bodyParser = require('body-parser')
 const http = require("http")
+const path = require('path')
 
 const passport = require('passport')
 
@@ -16,9 +17,6 @@ const cors = require('./cors')
 const userRoutes = require('./routes/auth')
 const uploadRoutes = require('./routes/upload')
 const postRoutes = require('./routes/post')
-const commentRoutes = require('./routes/comment')
-const notificationRoutes = require('./routes/notification')
-
 
 const PORT = process.env.PORT || 9000;
 
@@ -44,8 +42,6 @@ app.use(cors)
 app.use('/api/user', userRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/post', postRoutes)
-app.use('/api/comment', commentRoutes)
-app.use('/api/notification', notificationRoutes)
 
 app.use((err, req, res, next) => {
     res.status(500)
@@ -54,6 +50,14 @@ app.use((err, req, res, next) => {
         stack: err.stack
       })
 })
+
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static('../../client/src'))
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../../client', 'src', 'index.html'))
+  })
+}
     
 server.listen(PORT, (err) => {
     console.log(err || `Server opend at port '${PORT}'`);

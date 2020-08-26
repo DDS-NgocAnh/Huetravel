@@ -18,6 +18,14 @@ const commentSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    post: {
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+    },
+    isReply: {
+        type: Boolean,
+        default: false
+    },
     replies: [
         this
     ]

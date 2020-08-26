@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import axios from 'axios'
 
 import CFileUpload from '../components/pieces/FileUpload'
 import CNameChangeForm from '../components/pieces/NameChangeForm'
@@ -9,9 +8,8 @@ import CAssets from '../components/pieces/Assets'
 import CPwdChangeForm from '../components/pieces/PwdChangeForm'
 
 import CSlick from '../components/pieces/Slick'
-
-
-
+import { updateSocket } from '../utils'
+ 
 const mapStateToProps = (state) => {
     return {
         currentUser: state.currentUser.userData,
@@ -30,50 +28,37 @@ export default connect(mapStateToProps)
             user: {},
         }
 
-        this.callApiUser = this.callApiUser.bind(this)
-        this.updateSocket = this.updateSocket.bind(this)
+        this.updateSocket = updateSocket.bind(this)
+        this.updateProfile = this.updateProfile
+
     }
 
     componentDidMount() {
-        let state = this.state
-        this.callApiUser(state)
+        this.props.socket.emit('getUserProfile', this.state.userId)
+        this.updateProfile()
     }
 
-    UNSAFE_componentWillUpdate() {
-        this.updateSocket('getAvatar', 'avatar')
-        this.updateSocket('getNotes', 'notes')
-        this.updateSocket('getReviews', 'reviews')
-    }
-
-    updateSocket(socketName, updatedField) {
-        this.props.socket.on(socketName, data => {
+    updateProfile() {
+        this.props.socket.on(`returnUserProfileOf${this.state.userId}`, data => {
             if(data.error) {
                 this.setState({errorMessage: data.error})
             } else {
                 this.setState({
-                    ...this.state,
-                    user: {
-                        ...this.state.user,
-                        [updatedField]: data[updatedField]
-                    }})
+                    user: data
+                })
             }
         })
     }
 
-    callApiUser(state) {
-        let { userId } = state
-        axios.request({
-            url: `http://localhost:9000/api/user/${userId}`,
-            method: 'GET'
+    UNSAFE_componentWillUpdate(nextProps, nextState) {
+        if(nextProps.match.params.userId != this.props.match.params.userId) {
+            nextProps.socket.emit('getUserProfile', nextProps.match.params.userId)
+            this.updateSocket('user', `returnUserProfileOf${nextProps.match.params.userId}`)
         }
-        ).then(res => {
-            this.setState({
-                user: res.data
-            })
-        })
-        .catch(err => {
-            console.log(err.message || err.response.data.message);
-        })
+    }
+
+    componentWillUnmount() {
+        this.props.socket.off(`returnUserProfileOf${this.state.userId}`)
     }
 
     render() {

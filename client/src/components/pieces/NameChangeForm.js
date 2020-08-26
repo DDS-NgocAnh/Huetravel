@@ -37,7 +37,7 @@ withRouter(class NameChangeForm extends Component {
         }
         this.toastNoti(nextState)
 
-        this.props.socket.on('getName', data => {
+        this.props.socket.on(`returnUserProfileOf${this.state.userId}`, data => {
             if(data.error) {
                 this.setState({errorMessage: data.error})
             } else {

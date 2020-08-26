@@ -5,7 +5,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 const config = {
     placeholder: 'Write your review',
     toolbar: ['bold', 'italic', 'imageUpload',
-    'bulletedList', 'numberedList', 'blockQuote'],
+    'bulletedList', 'numberedList', 'link'],
     ckfinder: {
         uploadUrl: 'http://localhost:9000/api/upload/ckfinder',
     },

@@ -18,3 +18,8 @@ export const UPDATE_DONE = 'UPDATE_DONE'
 
 //Socket
 export const CONNECT_SOCKET = 'CONNECT_SOCKET'
+
+//Notification
+export const JUMP_TO_COMMENT = 'JUMP_TO_COMMENT'
+export const JUMP_TO_COMMENT_DONE = 'JUMP_TO_COMMENT_DONE'
+export const JUMP_TO_REPLY_DONE = 'JUMP_TO_REPLY_DONE'

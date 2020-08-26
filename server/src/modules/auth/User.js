@@ -85,12 +85,6 @@ const userSchema = new mongoose.Schema({
         default: 0,
         min: 0
     },
-    notifications: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Notification'
-        }
-    ]
 })
 
 module.exports =  mongoose.model('User', userSchema)

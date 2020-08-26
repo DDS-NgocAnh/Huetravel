@@ -1,158 +1,239 @@
-const Comment = require('./Comment')
-const Post = require('../post/Post')
-const Notification = require('../notification/Notification')
-const User = require('../auth/User')
+const Comment = require("./Comment");
+const Post = require("../post/Post");
+const Notification = require("../notification/Notification");
+const User = require("../auth/User");
 
-const { removeNoti } = require('../utils')
+const { removeNoti } = require("../utils");
 
 const handlers = {
-    async commentPost(req, res, next) {
-        try {
-            let postId = req.params.postId
-            let postExist = await Post.findById(postId)
+  async getComments(postId, sortBy = "newest", pageSize = 0, hasChange = false) {
+    try {
+      sortBy = sortBy == "newest" ? { date: -1 } : { date: 1 };
+      let skip = pageSize;
+      
+      let limit = 10;
+      
+      if(hasChange) {
+        skip = 0
+        limit = pageSize
+      }
 
-            if(postExist) {
-                let data = req.body
-                data.user = req.user.id
+      let comments = await Comment.find({ post: postId, isReply: false })
+        .populate([
+          { path: "user", model: "User", select: "_id name avatar" },
+          {
+            path: "replies",
+            model: "Comment",
+            populate: {
+              path: "user",
+              model: "User",
+              select: "_id name avatar",
+            },
+          },
+        ])
+        .skip(skip)
+        .limit(limit)
+        .sort(sortBy);
 
-                let comment = await Comment.create(data)
-                await Post.updateOne({_id: postId},
-                    { $push: {
-                        comments: comment._id
-                    }})
-                
-                let post = await Post.findOne({ _id: postId, writer: {$exists: true} })
 
-                if(post && (String(comment.user) != String(post.writer))) {
-                    let notificationData = {
-                        user: post.writer,
-                        comment: comment._id,
-                        commenter: req.user.id,
-                        post: postId,
-                        date: comment.date
-                    }
-    
-                    let notification = await Notification.create(notificationData)
+      let count = await Comment.countDocuments({ post: postId, isReply: false });
 
-                    await User.updateOne({ _id: post.writer }, {
-                        $push: { notifications: notification._id }
-                    })
-                }
+      return {
+        comments: comments,
+        commentsTotal: count,
+      };
+    } catch (error) {
+      return { error: error };
+    }
+  },
 
-                res.json({"message": 'Comment successful'})
-            } else {
-                throw new Error('No post found')
+  async getCommentersOfPost(postId) {
+    try {
+      let comments = await Comment.find({post: postId}, 'user')
+      return comments
+    } catch (error) {
+      return { error: error }
+    }
+  },
+
+  async getCommentOwner(commentId) {
+    try {
+      let user = await Comment.findById(commentId, '-_id user')
+      return user
+    } catch (error) {
+      return {error: error}
+    }
+  },
+
+  async commentPost(postId, userId, text) {
+    try {
+      let date = Date.now()
+
+      let data = {
+        post: postId,
+        user: userId,
+        text: text,
+        date: date
+      };
+
+      await Comment.create(data)
+      let comment = await Comment.findOne(data)
+      .populate([
+        { path: "user", model: "User", select: "_id name avatar" },
+        {
+          path: "replies",
+          model: "Comment",
+          populate: {
+            path: "user",
+            model: "User",
+            select: "_id name avatar",
+          },
+        },
+      ]) 
+
+      let post = await Post.findOne({
+        _id: postId,
+        writer: { $exists: true },
+      });
+
+      if (post && String(userId) != String(post.writer)) {
+        let notificationData = {
+          user: post.writer,
+          comment: comment._id,
+          commenter: userId,
+          post: postId,
+          date: comment.date,
+        }
+        await Notification.create(notificationData);
+      }
+
+      return {
+        comments: [comment]
+      }
+    } catch (error) {
+      return { error: error };
+    }
+  },
+
+  async replyComment(postId, userId, commentId, text) {
+    try {
+      let date = Date.now()
+
+      let data = {
+        post: postId,
+        user: userId,
+        text: text,
+        date: date,
+        isReply: true
+      };
+
+      let comment = await Comment.findById(commentId)
+
+      if(comment) {
+        await Comment.create(data);
+        let reply = await Comment.findOne(data)
+
+        await Comment.updateOne(
+          { _id: commentId },
+          {
+            $push: {
+              replies: reply._id,
+            },
+          }
+        );
+
+        let post = await Post.findOne({
+          _id: postId,
+          writer: { $exists: true },
+        });
+
+        let notificationData = {
+          comment: commentId,
+          post: postId,
+          date: reply.date,
+        };
+
+        if (String(comment.user) != String(userId)) {
+          notificationData.user = comment.user;
+          notificationData.replier = userId;
+
+          await Notification.create(notificationData);
+        }
+
+        if (post && String(userId) != String(post.writer)) {
+          notificationData.user = post.writer;
+          notificationData.commenter = req.user.id;
+
+          await Notification.create(notificationData);
+        }
+
+      } else {
+        return { error: 'No comment found' }
+      }
+    } catch (error) {
+      return { error: error }
+    }
+  },
+
+  async deleteComment(req, res, next) {
+    try {
+      let commentId = req.params.commentId;
+      let comment = await Comment.findById(commentId);
+      if (comment) {
+        if (String(comment.user) == String(req.user.id)) {
+          let replies = comment.replies;
+          replies.push(commentId);
+
+          await Comment.findByIdAndDelete(commentId);
+          await Comment.updateMany(
+            { replies: { $in: commentId } },
+            {
+              $pull: {
+                replies: commentId,
+              },
             }
-        } catch (error) {
-            next(error)
-        }
-    },
+          );
 
-    async replyComment(req, res, next) {
-        try {
-            let commentId = req.params.commentId
-            let postId = req.params.postId
-            let data = req.body
-            data.user = req.user.id
-
-            let comment = await Comment.findById(commentId)
-            if(comment) {
-                let reply = await Comment.create(data)
-                await Comment.updateOne({_id: commentId},
-                    { $push: {
-                        replies: reply._id
-                    }})
-                
-                let post = await Post.findOne({ _id:postId, writer: {$exists: true} })
-
-                let notificationData = {
-                    comment: reply._id,
-                    post: postId,
-                    date: reply.date
-                }
-
-                if(String(reply.user) != String(comment.user)) {
-                    notificationData.user = comment.user
-                    notificationData.replier = req.user.id
-
-                    let notification = await Notification.create(notificationData)
-
-                    await User.updateOne({_id: comment.user}, {
-                        $push: {notifications: notification._id}
-                })
-                }
-
-                if(post && (String(reply.user) != String(post.writer))) {
-                    notificationData.user = post.writer
-                    notificationData.commenter = req.user.id
-
-                    let notification = await Notification.create(notificationData)
-
-                    await User.updateOne({_id: post.writer}, {
-                        $push: { notifications: notification._id }
-                    })    
-                }
-                
-                res.json({"message": 'Reply successful'})
-            } else {
-                throw new Error('No comment found')
+          await Post.updateOne(
+            { _id: comment.post },
+            {
+              $pull: {
+                comments: commentId,
+              },
             }
-        } catch (error) {
-            next(error)
+          );
+
+          removeNoti(replies);
+
+          res.json({ message: "Delete comment successful" });
+        } else {
+          throw new Error("Unauthorized");
         }
-    },
+      } else {
+        throw new Error("No comment found");
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
 
-    async deleteComment(req, res, next) {
-        try {
-            let commentId = req.params.commentId
-            let comment = await Comment.findById(commentId)
-            if(comment) {
-                if(String(comment.user) == String(req.user.id)) {
-                    let replies = comment.replies
-                    replies.push(commentId)
+  async deleteAllComments(req, res, next) {
+    try {
+      let cmts = await Comment.deleteMany();
+      res.json(cmts);
+    } catch (error) {
+      next(error);
+    }
+  },
 
-                    await Comment.findByIdAndDelete(commentId)
-                    await Comment.updateMany({ replies: {$in: commentId} },
-                        {$pull: {
-                            replies: commentId
-                        }})
-    
-                    await Post.updateOne({ _id: comment.post },
-                        {$pull: {
-                            comments: commentId
-                        }})
+  async getAllComments(req, res, next) {
+    try {
+      let cmts = await Comment.find();
+      res.json(cmts);
+    } catch (error) {
+      next(error);
+    }
+  },
+};
 
-                    removeNoti(replies)
-    
-                    res.json({"message": "Delete comment successful"})
-                } else {
-                    throw new Error('Unauthorized')
-                }
-            } else {
-                throw new Error('No comment found')
-            }
-        } catch (error) {
-            next(error)
-        }
-    },
-
-    async deleteAllComments(req, res, next) {
-        try {
-            let cmts = await Comment.deleteMany()
-            res.json(cmts)
-        } catch (error) {
-            next(error)
-        }
-    },
-
-    async getAllComments(req, res, next) {
-        try {
-            let cmts = await Comment.find()
-            res.json(cmts)
-        } catch (error) {
-            next(error)
-        }
-    },
-}
-
-module.exports = handlers
+module.exports = handlers;

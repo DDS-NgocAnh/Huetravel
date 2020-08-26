@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import flowerIcon from '../../../assets/icons/flower.png'
 import rockIcon from '../../../assets/icons/rock.png'
 
-import { react, isUserInArr, toastNoti } from '../../../utils'
+import { react, isUserInArr, toastNoti, updateSocket } from '../../../utils'
 import * as actionTypes from '../../../store/actions/actionTypes'
 import anonymousAvatar from '../../../assets/img/avatar-default.png'
 
@@ -31,38 +31,62 @@ export default connect(mapStateToProps, mapDispatchToProps)
     constructor(props) {
         super(props)
 
-        let { footer, currentUser } = this.props
-        let flowers = 'react--none'
-        let rocks = 'react--none'
-
-        if(this.props.isLoggedIn) {
-            let hasUserInFlowers = isUserInArr(footer.flowers, currentUser.id)
-            flowers = hasUserInFlowers ? 
-            'react--reacted' : 'react--none'
-
-            let hasUserInRocks = isUserInArr(footer.rocks, currentUser.id)
-            rocks = hasUserInRocks ? 
-            'react--reacted' : 'react--none'
-        }
-
         this.state = {
-            flowers,
-            rocks,
+            flowers: 'react--none',
+            rocks: 'react--none',
             noteMessage: '',
             errorMessage: ''
         }
 
         this.react = react.bind(this)
         this.renderLink = this.renderLink.bind(this)
+        this.isReact = this.isReact.bind(this)
         this.toastNoti = toastNoti.bind(this)
+        this.updateSocket = updateSocket.bind(this)
+        this.isUserInArr = isUserInArr.bind(this)
+    }
+
+    componentDidMount() {
+        let { flowers, rocks } = this.isReact(this.state, this.props)
+        this.setState({flowers, rocks})
+    }
+
+    isReact(state, props) {
+        let { currentUser, isLoggedIn } = this.props
+        let footer = state.post || props.footer
+
+        let flowers, rocks
+
+        if(isLoggedIn) {
+            let hasUserInFlowers = this.isUserInArr(footer.flowers, currentUser.id)
+            flowers = hasUserInFlowers ? 
+            'react--reacted' : 'react--none'
+
+            let hasUserInRocks = this.isUserInArr(footer.rocks, currentUser.id)
+            rocks = hasUserInRocks ? 
+            'react--reacted' : 'react--none'
+        }
+
+        return {flowers, rocks}
     }
 
     UNSAFE_componentWillUpdate(nextProps, nextState) {
         this.toastNoti(nextState)
+        this.updateSocket('post', `returnPostOf${this.state.postId}`)
+        if(!nextProps.isLoggedIn) {
+            nextState.flowers = 'react--none'
+            nextState.rocks = 'react--none'
+        }
+
+        if(nextProps.isLoggedIn) {
+            let {flowers, rocks} = this.isReact(nextState, nextProps)
+            nextState.flowers = flowers || this.state.flowers
+            nextState.rocks = rocks || this.state.rocks
+        }
       }
 
     renderLink() {
-        let { footer } = this.props;
+        let footer  = this.state.post || this.props.footer;
 
         let avatar = footer.writer ? footer.writer.avatar : anonymousAvatar
         let name = footer.writer ? footer.writer.name : "Anonymous";
@@ -96,12 +120,12 @@ export default connect(mapStateToProps, mapDispatchToProps)
                     <h4 className='post-footer__title'>Reactions</h4>
                     <div className='post-footer__reaction-content'>
                         <div className={'post-footer__reaction-box ' + flowers}
-                        onClick={() => this.react('flowers', footer._id)}>
+                        onClick={() => this.react('flowers', footer._id, this.props.currentUser.id)}>
                             <img src={flowerIcon} alt='flower' className='reaction-box__icon'/>
                             <span className='reaction-box__title'>Give a flower</span>
                         </div>
                         <div className={'post-footer__reaction-box ' + rocks}
-                        onClick={() => this.react('rocks', footer._id)}>
+                        onClick={() => this.react('rocks', footer._id, this.props.currentUser.id)}>
                             <img src={rockIcon} alt='rock' className='reaction-box__icon'/>
                             <span className='reaction-box__title'>Throw a rock</span>
                         </div>

@@ -33,27 +33,48 @@ export default connect(mapStateToProps, mapDispatchToProps)
 (class DestBox extends Component {
     constructor(props) {
         super(props)
-        let { info, currentUser } = this.props
-
-        let isBookmark = 'bookmark--unnoted'
-        if(this.props.isLoggedIn && info.notes) {
-            let hasPostInNotes = isUserInArr(info.notes, currentUser.id)
-            isBookmark = hasPostInNotes ? 
-            'bookmark--noted' : 'bookmark--unnoted'
-        }
 
         this.state = {
-            isBookmark: isBookmark,
+            isBookmark: 'bookmark--unnoted',
             successMessage: '',
             errorMessage: ''
         }
 
         this.bookmark = bookmark.bind(this)
         this.toastNoti = toastNoti.bind(this)
+        this.isUserInArr = isUserInArr.bind(this)
+        this.isBookmark = this.isBookmark.bind(this)
+    }
+
+    componentDidMount() {
+        let isBookmark = this.isBookmark(this.state, this.props)
+        this.setState({isBookmark})
+    }
+
+    isBookmark(state, props) {
+        let { isLoggedIn, currentUser, info } = props
+
+        let isBookmark = 'bookmark--unnoted'
+        if(isLoggedIn && info.notes) {
+            let hasPostInNotes = this.isUserInArr(info.notes, currentUser.id)
+            isBookmark = hasPostInNotes ? 
+            'bookmark--noted' : 'bookmark--unnoted'
+        }
+
+        return isBookmark
     }
 
     UNSAFE_componentWillUpdate(nextProps, nextState) {
         this.toastNoti(nextState)
+
+        if(!nextProps.isLoggedIn) {
+            nextState.isBookmark = 'bookmark--unnoted'
+        }
+
+        if(nextProps.isLoggedIn && !this.props.isLoggedIn) {
+            let isBookmark = this.isBookmark(nextState, nextProps)
+            nextState.isBookmark = isBookmark
+        }
       }
 
     render() {

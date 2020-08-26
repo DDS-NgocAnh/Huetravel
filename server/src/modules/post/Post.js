@@ -70,12 +70,7 @@ const postSchema = new Schema({
             }
         }
     ],
-    comments: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Comment'      
-        }
-    ],
+
     flowersTotal: {
         type: Number,
         default: 0,
@@ -86,21 +81,6 @@ const postSchema = new Schema({
         default: 0,
         min: 0
     }
-})
-
-postSchema.pre('deleteOne', async function(next) {
-    const postId = this.getQuery()["_id"]
-    await User
-    .updateMany({$or: [
-        { 'reviews': {$in: postId} },
-        { 'notes': {$in: postId} },
-        { 'flowers': {$in: postId} },
-        { 'rocks': {$in: postId} }
-      ]}, { "$pull":  { "reviews" : { "post": postId },
-                                "notes": { "post": postId },
-                                "flowers": { "post": postId },
-                                "rocks": { "post": postId } }})
-    next()
 })
 
 module.exports =  mongoose.model('Post', postSchema)

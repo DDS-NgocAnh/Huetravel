@@ -215,7 +215,7 @@ function bookmark(postId, isUserProfile) {
   }
 }
 
-function react(reactIcon, postId) {
+function react(reactIcon, postId, userId) {
   if (this.props.isLoggedIn) {
     let toggleIcon = reactIcon == "flowers" ? "rocks" : "flowers";
     let style =
@@ -227,18 +227,25 @@ function react(reactIcon, postId) {
       this.setState({ [toggleIcon]: toggleStyle });
     }
 
-    axios
-      .post(`http://localhost:9000/api/post/react/${reactIcon}/${postId}`)
-      .then((res) => {
-        this.setState({ successMessage: res.data.message });
-      })
-      .catch((err) => {
-        let errorMessage = err.message || err.response.data.message;
-        this.setState({ errorMessage });
-      });
+    this.props.socket.emit('reactPost', {userId: userId, postId: postId, reactIcon: reactIcon})
   } else {
     this.props.onOpen();
   }
+}
+
+function updateSocket(stateField, socketName) {
+  this.props.socket.on(socketName, data => {
+      if(data.error) {
+          this.setState({
+            errorMessage: data.error,
+            [stateField]: ''
+          })
+      } else {
+          this.setState({
+              [stateField]: data
+            })
+      }
+  })
 }
 
 function toastNoti(nextState) {
@@ -278,4 +285,5 @@ export {
   bookmark,
   react,
   toastNoti,
+  updateSocket
 };

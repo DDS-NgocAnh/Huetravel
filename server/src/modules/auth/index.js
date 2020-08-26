@@ -152,9 +152,9 @@ const handlers = {
         }
     },
 
-    async getProfile(req, res, next) {
+    async getProfile(userId) {
         try {
-            let id = req.params.userId
+            let id = userId
             let pathSelect = 'name address avatar rocksTotal flowersTotal notes'
             let populateQuery = [
                 { path: 'reviews', model: 'Post', select: pathSelect,
@@ -168,7 +168,7 @@ const handlers = {
             let userData = user.toObject()
             let notes = userData.notes.map(note => note.post)
 
-            res.json({
+            return {
                 id: user._id,
                 name: user.name,
                 avatar: user.avatar,
@@ -176,9 +176,9 @@ const handlers = {
                 reviews: user.reviews,
                 flowersTotal: user.flowersTotal,
                 rocksTotal: user.rocksTotal
-            })
+            }
         } catch (error) {
-            next(error)
+            return { error: error }
         }
     },
 
@@ -238,50 +238,10 @@ const handlers = {
         }
     },
 
-    async getName(userId) {
-        try {
-            let user = await User.findById(userId)
-            return { name: user.name }
-        } catch (error) {
-            return { error: error}
-        }
-    },
-
     async getAvatar(userId) {
         try {
             let user = await User.findById(userId)
             return { avatar: user.avatar }
-        } catch (error) {
-            return { error: error}
-        }
-    },
-
-    async getReviews(userId) {
-        try {
-            let pathSelect = 'name address avatar rocksTotal flowersTotal notes'
-            
-            let user = await User.findById(userId)
-            .populate({path: 'reviews', model: 'Post', select: pathSelect})
-
-            
-            return { reviews: user.reviews }
-        } catch (error) {
-            return { error: error}
-        }
-    },
-
-    async getNotes(userId) {
-        try {
-            let pathSelect = 'name address avatar rocksTotal flowersTotal notes'
-
-            let user = await User.findById(userId)
-            .populate({ path: 'notes.post', model: 'Post', select: pathSelect,
-            populate: {path: 'notes', select: 'user._id'}})
-
-            let userData = user.toObject()
-            let notes = userData.notes.map(note => note.post)
-
-            return { notes: notes }
         } catch (error) {
             return { error: error}
         }
