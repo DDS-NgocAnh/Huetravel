@@ -102,11 +102,11 @@ export default connect(mapStateToProps)
         sortBy: filter,
       };
 
-      let url = `http://localhost:9000/api/post/all/${category}`;
+      let url = `/api/post/all/${category}`;
 
       if (this.props.title) {
         queryParams.title = this.props.title;
-        url = `http://localhost:9000/api/post/user/${userId}/${category}`;
+        url = `/api/post/user/${userId}/${category}`;
       }
 
       axios
@@ -136,11 +136,11 @@ export default connect(mapStateToProps)
         sortBy: filter,
       };
 
-      let url = `http://localhost:9000/api/post/all/${category}`;
+      let url = `/api/post/all/${category}`;
 
       if (this.props.title) {
         queryParams.title = this.props.title;
-        url = `http://localhost:9000/api/post/user/${userId}/${category}`;
+        url = `/api/post/user/${userId}/${category}`;
       }
 
       axios

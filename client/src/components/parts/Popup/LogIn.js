@@ -63,7 +63,7 @@ export default connect(mapStateToProps, mapDisPatchToProps)
             }
 
             axios.request({
-                url: 'http://localhost:9000/api/user/login',
+                url: '/api/user/login',
                 method: 'POST',
                 data: user
               })

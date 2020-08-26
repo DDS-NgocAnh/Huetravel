@@ -99,7 +99,7 @@ export default connect(
 
       onDelete() {
         axios
-          .delete(`http://localhost:9000/api/post/${this.state.postId}`)
+          .delete(`/api/post/${this.state.postId}`)
           .then((res) => {
             this.props.socket.emit("deletePost", {
               userId: this.props.currentUser.id,

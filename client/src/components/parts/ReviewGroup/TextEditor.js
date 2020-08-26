@@ -7,7 +7,7 @@ const config = {
     toolbar: ['bold', 'italic', 'imageUpload',
     'bulletedList', 'numberedList', 'link'],
     ckfinder: {
-        uploadUrl: 'http://localhost:9000/api/upload/ckfinder',
+        uploadUrl: '/api/upload/ckfinder',
     },
 }
 

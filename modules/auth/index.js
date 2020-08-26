@@ -50,7 +50,7 @@ const handlers = {
                     to: userData.email,
                     subject: 'Please verify your email',
                     html: confirmHTML + 
-                    `<p><a href='http://localhost:9000/api/user/confirm-email/${userData.confirmId}'>Click me to confirm</a></p>`
+                    `<p><a href='/api/user/confirm-email/${userData.confirmId}'>Click me to confirm</a></p>`
                     }, (err) => {
                     if(err) {
                         next(err)

@@ -7,7 +7,6 @@
     "build": "webpack --mode production",
     "start": "webpack-dev-server"
   },
-
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -49,6 +48,5 @@
     "style-loader": "^1.2.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12"
-  },
-  "proxy": "http://localhost:9000"
+  }
 }

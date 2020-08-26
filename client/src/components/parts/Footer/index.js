@@ -20,7 +20,7 @@ export default class Footer extends Component {
 
     componentDidMount() {
         axios.request({
-            url: 'http://localhost:9000/api/post/all/top-3-posts',
+            url: '/api/post/all/top-3-posts',
             method: 'GET'
         }).then( res => {
             if(res.data.length > 0) {

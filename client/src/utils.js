@@ -201,7 +201,7 @@ function bookmark(postId, isUserProfile) {
     this.setState({ isBookmark: style });
 
     axios
-      .post(`http://localhost:9000/api/post/note/${postId}`)
+      .post(`/api/post/note/${postId}`)
       .then((res) => {
         this.props.socket.emit('notePost', ({userId: this.props.currentUser.id, isUserProfile}))
         this.setState({ noteMessage: res.data.message });

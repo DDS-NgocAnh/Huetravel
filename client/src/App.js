@@ -10,7 +10,7 @@ import { connectSocket } from './store/actions/socketAction'
 import Routes from './Routes'
 
 let socket
-const ENDPOINT = 'http://localhost:9000'
+const ENDPOINT = '/'
 
 // console.log(
 //   `TODO:

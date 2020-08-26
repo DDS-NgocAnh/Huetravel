@@ -42,8 +42,8 @@ app.use("/api/user", userRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/post", postRoutes);
 
-app.use(express.static('client/dist'));
 app.use('/public', express.static('client/public'))
+app.use(express.static('client/dist'));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/dist/index.html'));
 });

@@ -125,10 +125,10 @@ export default connect(
           category: trimValue(category),
         };
 
-        let url = "http://localhost:9000/api/post/";
+        let url = "/api/post/";
         let method = "post";
         if (this.props.isUpdate) {
-          url = `http://localhost:9000/api/post/${this.props.postData.id}`;
+          url = `/api/post/${this.props.postData.id}`;
           method = "put";
         }
 

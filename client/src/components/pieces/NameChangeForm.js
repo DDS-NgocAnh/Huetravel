@@ -82,7 +82,7 @@ withRouter(class NameChangeForm extends Component {
             }
 
             axios.post(
-                'http://localhost:9000/api/user/change-name',
+                '/api/user/change-name',
                 newName
             ).then(res => {
                 this.props.socket.emit('changeName', (this.props.userId))
