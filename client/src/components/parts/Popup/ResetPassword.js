@@ -57,7 +57,7 @@ export default connect(mapStateToProps, mapDisPatchToProps)
             }
 
             axios.post(
-                'http://localhost:9000/api/user/reset-password',
+                '/api/user/reset-password',
                 user
               )
               .then((res) => {
