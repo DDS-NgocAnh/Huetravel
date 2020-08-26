@@ -4,7 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const http = require("http");
 const path = require("path");
-
+const serverStatic = require('server-static')
 const passport = require("passport");
 
 const fileUpload = require("express-fileupload");

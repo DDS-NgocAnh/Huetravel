@@ -109,7 +109,7 @@ const handlers = {
             let { email, password } = data
 
             let formattedEmail = String(email)
-            let hashedPassword = hashMd5(String(password))
+            let hashedPassword = hashMd5(password)
             let populateQuery = [
                 { path: 'notifications', model: 'Notification', match: { isSeen: false },
             }
@@ -185,9 +185,10 @@ const handlers = {
     async changePassword(req, res, next) {
         try {
             let { newPassword, currentPassword } = req.body
+            console.log(currentPassword, newPassword);
 
-            let hashedNewPassword = hashMd5(String(newPassword))
-            let hashedCurrentPassword = hashMd5(String(currentPassword))
+            let hashedNewPassword = hashMd5(newPassword)
+            let hashedCurrentPassword = hashMd5(currentPassword)
 
             let user = await User.findById(req.user.id)
             if(user.password != hashedCurrentPassword) {
