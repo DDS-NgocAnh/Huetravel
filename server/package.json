@@ -10,7 +10,7 @@
     "server": "nodemon ./src/index.js",
     "client": "npm start --prefix ../client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix ../client && npm start --prefix ../client"
+    "heroku-postbuild": "cd ../client && npm install --only=dev && npm install && npm run build"
   },
   "author": "",
   "license": "ISC",
