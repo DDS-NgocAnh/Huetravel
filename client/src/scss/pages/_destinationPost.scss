@@ -3,6 +3,14 @@
     min-height: 100vh;
     width: 70rem;
     margin: 0 auto;
+    position: relative;
+
+    .loading {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%)
+    }
 
     & > *:not(.delete-warning),
     & > *:not(:last-child) {
@@ -25,15 +33,15 @@
                 max-width: 100%;
                 line-height: 1.6rem;
                 font-size: 1.4rem;
+                margin-bottom: .4rem;
             }
 
             & img {
-                padding: .5rem;
+                margin-top: .6rem;
             }
 
             & figcaption {
-                margin-top: .4rem;
-                margin-bottom: .4rem;
+                margin-bottom: .6rem;
                 text-align: center;
                 font-size: 1.2rem;
             }

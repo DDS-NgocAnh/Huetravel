@@ -8,10 +8,8 @@ dotenv.config()
 const { hashMd5,
     uuidv4,
     signToken,
-    getRandomPassword
+    getRandomPassword,
     } = require('../utils')
-const { use } = require('passport')
-
 
 const mailTransport = nodemailer.createTransport({
     service: 'gmail',
@@ -39,21 +37,19 @@ const handlers = {
 
             if(!user) {
                 let confirmId = uuidv4()
-                data.confirmId = confirmId
-                data.password = hashMd5(data.password)
-                let user = await User.create(data)
-                let userData = user.toObject()
-                delete userData.password
                 await mailTransport.sendMail({
                     from: process.env.EMAIL,
-                    to: userData.email,
+                    to: data.email,
                     subject: 'Please verify your email',
                     html: confirmHTML + 
-                    `<p><a href='https://huetravel.herokuapp.com/api/user/confirm-email/${userData.confirmId}'>Click me to confirm</a></p>`
-                    }, (err) => {
+                    `<p><a href='https://huetravel.herokuapp.com/api/user/confirm-email/${confirmId}'>Click me to confirm</a></p>`
+                    }, async (err) => {
                     if(err) {
                         next(err)
                     } else {
+                        data.confirmId = confirmId
+                        data.password = hashMd5(data.password)
+                        await User.create(data)
                         res.send({ "message": 'Success! Please check your email' })
                     }
                 })

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
@@ -9,6 +9,7 @@ import { update } from "../../../store/actions/postAction";
 import CPostHeader from "./PostHeader";
 import CPostFooter from "./PostFooter";
 import CPostComment from "./PostComment";
+import CLoading from "../../pieces/Loading";
 
 import { toastNoti, updateSocket } from "../../../utils";
 
@@ -37,6 +38,7 @@ export default connect(
         this.state = {
           postId: props.match.params.postId,
           isDelete: false,
+          isLoading: true
         };
         this.deletePost = this.deletePost.bind(this);
         this.closeNoti = this.closeNoti.bind(this);
@@ -49,6 +51,7 @@ export default connect(
       componentDidMount() {
         this.props.socket.emit("getPost", this.state.postId);
         this.props.socket.on(`returnPostOf${this.state.postId}`, (data) => {
+          this.setState({isLoading: false})
           if (data.error) {
             this.setState({ errorMessage: data.error });
           } else {
@@ -123,9 +126,13 @@ export default connect(
       }
 
       render() {
-        let { post, postId, isDelete } = this.state;
+        let { post, postId, isDelete , isLoading} = this.state;
 
-        if (!post) {
+        if(isLoading) {
+          return (
+            <CLoading />
+          )
+        } else if(!post) {
           return (
             <h2 className="u-center-text u-text-bold u-center-el u-color-light">
               No post found

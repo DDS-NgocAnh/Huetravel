@@ -2,6 +2,16 @@
     @include default-section;
     height: 100vh;
 
+    .dest-list-container {
+        position: relative;
+        .loading {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
     .dest-box {
         position: relative;
     }

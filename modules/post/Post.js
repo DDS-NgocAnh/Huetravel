@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const User = require('../auth/User')
+const { changeAlias } = require('../utils')
 
 const defaultAvatar = `../../../public/uploads/image-default.png`
 
@@ -15,6 +16,10 @@ const postSchema = new Schema({
         enum: ['attraction', 'restaurant', 'cafe', 'shopping']
     },
     name: {
+        type: String,
+        required: true
+    },
+    searchKey: {
         type: String,
         required: true
     },

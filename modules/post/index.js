@@ -3,7 +3,7 @@ const User = require("../auth/User");
 const Comment = require("../comment/Comment");
 const Notification = require("../notification/Notification");
 
-const { decreaseReactTotal, removeFromArrayByValue } = require("../utils");
+const { decreaseReactTotal, changeAlias } = require("../utils");
 
 const handlers = {
   async getPost(postId) {
@@ -104,7 +104,6 @@ const handlers = {
     }
   },
 
-
   async createPost(req, res, next) {
     try {
       let data = req.body;
@@ -112,6 +111,7 @@ const handlers = {
       if (req.user) {
         let userId = req.user.id;
         data.writer = userId;
+        data.searchKey = changeAlias(data.name)
 
         post = await Post.create(data);
         await User.updateOne(
@@ -321,7 +321,7 @@ const handlers = {
       let limit = pageSize;
 
       if (search) {
-        conditions.name = new RegExp(search, "i");
+        conditions.searchKey = new RegExp(changeAlias(search), "i")
       }
 
       let count = await Post.countDocuments(conditions);
@@ -386,7 +386,7 @@ const handlers = {
         let limit = pageSize;
 
         if (search) {
-          conditions.name = new RegExp(search, "i");
+          conditions.searchKey = new RegExp(changeAlias(search), "i")
         }
 
         if (title == "reviews") {
