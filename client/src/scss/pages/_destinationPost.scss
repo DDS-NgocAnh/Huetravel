@@ -23,6 +23,12 @@
         &__content {
             & * {
                 max-width: 100%;
+                line-height: 1.6rem;
+                font-size: 1.4rem;
+            }
+
+            & img {
+                padding: .5rem;
             }
 
             & figcaption {
