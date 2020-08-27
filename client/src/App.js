@@ -13,7 +13,7 @@ let socket
 const ENDPOINT = '/'
 
 // console.log(
-//   `TODO:
+//   `TODO: RUN ERVER: npm run build >> npm run start >> git add commit push
 //   4. cleanArray in server/ultis not work with includes
 //   5.(optional) update refreshToken
 //   6.(optional) update socket with jwt (dont use restfulAPI anymore)`
