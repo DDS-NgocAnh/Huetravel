@@ -44,13 +44,12 @@ const handlers = {
                 let user = await User.create(data)
                 let userData = user.toObject()
                 delete userData.password
-
                 await mailTransport.sendMail({
                     from: process.env.EMAIL,
                     to: userData.email,
                     subject: 'Please verify your email',
                     html: confirmHTML + 
-                    `<p><a href='http://localhost:9000/api/user/confirm-email/${userData.confirmId}'>Click me to confirm</a></p>`
+                    `<p><a href='https://huetravel.herokuapp.com/api/user/confirm-email/${userData.confirmId}'>Click me to confirm</a></p>`
                     }, (err) => {
                     if(err) {
                         next(err)
