@@ -5,6 +5,7 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
 import { update } from "../../../store/actions/postAction";
+import * as actionTypes from '../../../store/actions/actionTypes'
 
 import CPostHeader from "./PostHeader";
 import CPostFooter from "./PostFooter";
@@ -17,13 +18,15 @@ const mapStateToProps = (state) => {
   return {
     currentUser: state.currentUser.userData,
     userNotes: state.currentUser.notes,
-    socket: state.socket.socket
+    socket: state.socket.socket,
+    isUpdate: state.postUpdate.isUpdate,
   };
 };
 
 const mapDispatchToState = (dispatch) => {
   return {
     onUpdate: (postData) => dispatch(update(postData)),
+    updateDone: () => dispatch({ type: actionTypes.UPDATE_DONE }),
   };
 };
 
@@ -60,6 +63,10 @@ export default connect(
             });
           }
         });
+        if(this.props.isUpdate) {
+          this.setState({updateMessage: 'Updated successfully'})
+          this.props.updateDone()
+        }
       }
 
       UNSAFE_componentWillMount() {

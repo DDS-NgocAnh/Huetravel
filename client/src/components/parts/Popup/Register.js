@@ -95,11 +95,11 @@ export default connect(mapStateToProps, mapDisPatchToProps)
               })
               .then(res => {
                 let successMessage = res.data.message
-                this.setState({ successMessage })
+                this.setState({ successMessage, errorMessage: '' })
               })
               .catch(err => {
                 let errorMessage = err.response.data.message
-                this.setState({ errorMessage })
+                this.setState({ errorMessage, successMessage: '' })
               })
               .finally(() => {
                   this.props.submitDone()

@@ -25,15 +25,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateDone: () => dispatch({ type: actionTypes.UPDATE_DONE }),
-  };
-};
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(
   withRouter(
     class ReviewGroup extends Component {
@@ -158,12 +151,10 @@ export default connect(
               }
 
               if (this.props.isUpdate) {
-                updateMessage = res.data.message;
                 this.props.socket.emit("updatePost", this.props.postData.id);
                 this.props.history.push(
                   `/destinations/${this.props.postData.id}`
                 );
-                this.props.updateDone();
               } else {
                 successMessage = res.data.message;
               }
