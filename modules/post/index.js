@@ -288,6 +288,9 @@ const handlers = {
           const updateFields = {};
           for (const [key, value] of Object.entries(req.body)) {
             updateFields[key] = value;
+            if(String(key) === 'name') {
+              updateFields.searchKey = changeAlias(value)
+            }
           }
 
           await Post.updateOne({ _id: postId }, { $set: updateFields });
