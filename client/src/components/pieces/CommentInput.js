@@ -92,7 +92,9 @@ export default connect(
 
     render() {
       let { inputStyle, isDisabled } = this.state;
-
+      let placeholder = this.props.style == "input-reply" ? 
+      'Write your reply' : 'Write your comment'
+      
       return (
         <form ref={(ref) => (this.form = ref)} className={this.props.style}>
           <img src={this.props.avatar} className="comment-avatar"></img>
@@ -102,7 +104,7 @@ export default connect(
             className={inputStyle}
             onChange={this.inputHandler}
             disabled={isDisabled}
-            placeholder="Write your comment"
+            placeholder={placeholder}
             onKeyDown={this.submitHandler}
             rows={1}
           />
