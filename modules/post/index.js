@@ -173,6 +173,10 @@ const handlers = {
             await Notification.findByIdAndDelete(notificationId);
           }
         }
+        let successMessage = reactIcon == 'flowers' ?
+        'Take back your flower' : 'Take back your rock'
+
+        return { successMessage: successMessage}
       } else {
         await User.updateOne(
           { _id: userId },
@@ -218,6 +222,11 @@ const handlers = {
             await Notification.findByIdAndDelete(removeNotificationId);
           }
         }
+
+        let successMessage = reactIcon == 'flowers' ? 
+        'Give a flower' : 'Throw a rock'
+
+        return { successMessage: successMessage}
       }
     } catch (error) {
       return { error: error };

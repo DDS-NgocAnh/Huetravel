@@ -203,7 +203,10 @@ function bookmark(postId, isUserProfile) {
     axios
       .post(`/api/post/note/${postId}`)
       .then((res) => {
-        this.props.socket.emit('notePost', ({userId: this.props.currentUser.id, isUserProfile}))
+        this.props.socket.emit("notePost", {
+          userId: this.props.currentUser.id,
+          isUserProfile,
+        });
         this.setState({ noteMessage: res.data.message });
       })
       .catch((err) => {
@@ -227,25 +230,32 @@ function react(reactIcon, postId, userId) {
       this.setState({ [toggleIcon]: toggleStyle });
     }
 
-    this.props.socket.emit('reactPost', {userId: userId, postId: postId, reactIcon: reactIcon})
+    this.props.socket.emit("reactPost", {
+      userId: userId,
+      postId: postId,
+      reactIcon: reactIcon,
+    });
   } else {
     this.props.onOpen();
   }
 }
 
 function updateSocket(stateField, socketName) {
-  this.props.socket.on(socketName, data => {
-      if(data.error) {
-          this.setState({
-            errorMessage: data.error,
-            [stateField]: ''
-          })
-      } else {
-          this.setState({
-              [stateField]: data
-            })
-      }
-  })
+  this.props.socket.on(socketName, (data) => {
+    if (data.error) {
+      this.setState({
+        errorMessage: data.error,
+        [stateField]: "",
+      });
+    } else {
+      let successMessage = data.successMessage ? data.successMessage : "";
+
+      this.setState({
+        [stateField]: data,
+        successMessage: successMessage,
+      });
+    }
+  });
 }
 
 function toastNoti(nextState) {
@@ -285,5 +295,5 @@ export {
   bookmark,
   react,
   toastNoti,
-  updateSocket
+  updateSocket,
 };

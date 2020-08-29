@@ -43,7 +43,7 @@ export default connect(
         event.preventDefault();
 
         this.setState(
-          { isVisibled: false, filePath: "", event: event.target.files[0] },
+          { isVisibled: false, event: event.target.files[0] },
           () => {
             let { event } = this.state;
             const formData = new FormData();
