@@ -71,7 +71,9 @@ export default connect(mapStateToProps, mapDispatchToProps)
     }
 
     UNSAFE_componentWillUpdate(nextProps, nextState) {
-        this.toastNoti(nextState)
+        if(nextState.successMessage) {
+            this.toastNoti(nextState)
+        }
         this.updateSocket('post', `returnPostOf${this.state.postId}`)
         if(!nextProps.isLoggedIn) {
             nextState.flowers = 'react--none'

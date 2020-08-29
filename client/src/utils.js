@@ -248,11 +248,10 @@ function updateSocket(stateField, socketName) {
         [stateField]: "",
       });
     } else {
-      let successMessage = data.successMessage ? data.successMessage : "";
 
       this.setState({
         [stateField]: data,
-        successMessage: successMessage,
+        successMessage: data.successMessage,
       });
     }
   });
