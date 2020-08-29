@@ -91,7 +91,7 @@ const handlers = {
         await User.findByIdAndUpdate(user._id, user, {
           new: true,
         });
-        res.redirect("/")
+        res.redirect("https://huetravel.herokuapp.com")
       } else {
         res.send(`
                 <html>
