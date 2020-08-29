@@ -107,11 +107,13 @@ const handlers = {
   async createPost(req, res, next) {
     try {
       let data = req.body;
+      data.date = Date.now()
+      data.searchKey = changeAlias(data.name)
+      
       let post;
       if (req.user) {
         let userId = req.user.id;
         data.writer = userId;
-        data.searchKey = changeAlias(data.name)
 
         post = await Post.create(data);
         await User.updateOne(
@@ -128,7 +130,7 @@ const handlers = {
         post = await Post.create(data);
       }
 
-      let postId = await Post.findById(data)
+      let postId = await Post.findOne(data)
 
       res.json({ postId: postId._id,
         message: "Posted successfully" });

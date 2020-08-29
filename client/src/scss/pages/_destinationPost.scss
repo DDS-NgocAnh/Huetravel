@@ -28,6 +28,7 @@
     }
 
     .post {
+        padding-bottom: 2rem !important;
         &__content {
             & * {
                 max-width: 100%;
@@ -37,11 +38,12 @@
             }
 
             & img {
-                margin: .6rem auto 0 auto;
+                margin-top: .8rem;
+                display: block;
             }
 
             & figcaption {
-                margin-bottom: .6rem;
+                margin-bottom: .8rem;
                 text-align: center;
                 font-size: 1.2rem;
             }
