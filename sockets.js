@@ -91,6 +91,7 @@ module.exports.listen = function(server){
         socket.on('changeName', async (userId) => {
           let userData = await authHandler.getProfile(userId)
           socket.broadcast.emit(`returnUserProfileOf${userId}`, userData)
+          socket.emit(`returnUserProfileOf${userId}`, userData)
           let posts = await postHandler.findUserInComments(userId)
           let notiOwners = await notificationHandler.findNotiOwnersByUserId(userId)
           owners = cleanArray(notiOwners, 'user')
