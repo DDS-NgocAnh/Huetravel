@@ -13,6 +13,7 @@ withRouter(class NameChangeForm extends Component {
         this.state = {
             userId: props.match.params.userId,
             userName: '',
+            userNameInitial: props.userName,
             placeholder: '',
             isVisibled: false,
             isDisabled: true,
@@ -88,6 +89,7 @@ withRouter(class NameChangeForm extends Component {
                 this.props.socket.emit('changeName', (this.props.userId))
 
                 this.setState({
+                    userNameInitial: newName.name,
                     successMessage: res.data.message
                 })
             }
@@ -112,6 +114,7 @@ withRouter(class NameChangeForm extends Component {
             btnChange,
             isVisibled, btnDisabled,
             inputStyle, placeholder,
+            userNameInitial,
             userId
          } = this.state
 
@@ -126,7 +129,7 @@ withRouter(class NameChangeForm extends Component {
                 {!isVisibled && (
                     <input name='userName' 
                     className='input input--primary u-margin-bottom-tiny' 
-                    defaultValue={userName}
+                    defaultValue={userNameInitial}
                     disabled={disabled}
                     onChange={this.inputHandler}
                     />
