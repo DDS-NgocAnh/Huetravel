@@ -91,12 +91,7 @@ const handlers = {
         await User.findByIdAndUpdate(user._id, user, {
           new: true,
         });
-        res.send(`<html><script>
-                    window.onload = function() {
-                      alert("Confirm successful");
-                    }
-                    </script>
-                    </html>`);
+        res.redirect("/")
       } else {
         res.send(`
                 <html>

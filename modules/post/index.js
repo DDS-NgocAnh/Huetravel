@@ -128,7 +128,10 @@ const handlers = {
         post = await Post.create(data);
       }
 
-      res.json({ message: "Posted successfully" });
+      let postId = await Post.findById(data)
+
+      res.json({ postId: postId._id,
+        message: "Posted successfully" });
     } catch (error) {
       next(error);
     }

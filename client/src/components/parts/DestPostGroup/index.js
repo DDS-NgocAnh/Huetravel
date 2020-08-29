@@ -66,6 +66,8 @@ export default connect(
         if(this.props.isUpdate) {
           this.setState({updateMessage: 'Updated successfully'})
           this.props.updateDone()
+        } else if(this.props.location.state.message) {
+          this.setState({successMessage: this.props.location.state.message})
         }
       }
 

@@ -25,9 +25,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(
-  mapStateToProps
-)(
+export default connect(mapStateToProps)(
   withRouter(
     class ReviewGroup extends Component {
       constructor(props) {
@@ -49,7 +47,6 @@ export default connect(
           nameError: false,
           addressError: false,
           textEditorError: false,
-          successMessage: "",
           errorMessage: "",
           reset: false,
         };
@@ -140,9 +137,6 @@ export default connect(
               data: post,
             })
             .then((res) => {
-              let updateMessage = "";
-              let successMessage = "";
-
               if (this.props.isLoggedIn) {
                 this.props.socket.emit(
                   "createReview",
@@ -156,18 +150,13 @@ export default connect(
                   `/destinations/${this.props.postData.id}`
                 );
               } else {
-                successMessage = res.data.message;
+                this.props.history.push(`/destinations/${res.data.postId}`, {
+                  message: res.data.message,
+                });
               }
-              this.setState({
-                updateMessage,
-                successMessage,
-                errorMessage: "",
-              });
             })
             .catch((err) => {
               this.setState({
-                successMessage: "",
-                updateMessage: "",
                 errorMessage: err.message || err.response.data.message,
               });
             })
