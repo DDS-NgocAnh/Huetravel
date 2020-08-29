@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 const User = require('../auth/User')
 const { changeAlias } = require('../utils')
 
-const defaultAvatar = `../../../public/uploads/image-default.png`
+const defaultAvatar = `../../../public/image-default.png`
 
 const postSchema = new Schema({
     avatar: {

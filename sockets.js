@@ -109,10 +109,11 @@ module.exports.listen = function(server){
         })
 
         socket.on('reactPost', async data => {
-          await postHandler.reactPost(data.userId, data.postId, data.reactIcon)
+          let successMessage = await postHandler.reactPost(data.userId, data.postId, data.reactIcon)
           await setReactTotalAtPost(data.postId);
 
           let postData = await postHandler.getPost(data.postId)
+          postData.successMessage = successMessage
 
           socket.broadcast.emit(`returnPostOf${data.postId}`, postData)
           socket.emit(`returnPostOf${data.postId}`, postData)

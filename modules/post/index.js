@@ -109,7 +109,7 @@ const handlers = {
       let data = req.body;
       data.date = Date.now()
       data.searchKey = changeAlias(data.name)
-      
+
       let post;
       if (req.user) {
         let userId = req.user.id;
@@ -231,7 +231,7 @@ const handlers = {
         let successMessage = reactIcon == 'flowers' ? 
         'Give a flower' : 'Throw a rock'
 
-        return { successMessage: successMessage}
+        return { successMessage: successMessage }
       }
     } catch (error) {
       return { error: error };

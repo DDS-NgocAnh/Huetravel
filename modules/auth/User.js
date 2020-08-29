@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const defaultAvatar = `../../../public/uploads/avatar-default.png`
+const defaultAvatar = `../../../public/avatar-default.png`
 
 const userSchema = new mongoose.Schema({
     name: {
