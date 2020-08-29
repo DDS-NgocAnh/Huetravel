@@ -1,55 +1,60 @@
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs");
+const path = require("path");
+const sharp = require("sharp");
 
 const handlers = {
-    async uploadCKFinder(req, res, next) {
-        try {
-            const file = req.files.upload
+  async uploadCKFinder(req, res, next) {
+    try {
+      const file = req.files.upload;
 
-            file.mv(`${__dirname}../../../client/public/uploads/${file.name}`, err => {
-                if(err) {
-                    console.log(err);
-                }
-            })
-            
-            const targetPathUrl = `../../../public/uploads/${file.name}`
-
-            if(path.extname(file.name).toLowerCase() === '.png' || '.jpg' || '.jpeg') {
-                res.json({
-                    uploaded: true,
-                    url: `${targetPathUrl}`
-                })
-                
-                if(err) {
-                    next(err)
-                }
-            }
-            
-        } catch (error) {
-            next(error)
+      const filename = file.name.replace(/\..+$/, "");
+      const newFilename = `huetravel-${filename}-${Date.now()}.jpeg`;
+      const targetPathUrl = `${__dirname}../../../client/public/uploads/${newFilename}`
+      await sharp(file.data).resize(640, null).toFormat("jpeg").jpeg({ quality: 90 })
+      .toFile(
+        targetPathUrl,
+        function (err) {
+          if (err) {
+            next(err)
+          }
+          res.json({
+            uploaded: true,
+            url: `../../../public/uploads/${newFilename}`,
+          });
         }
-    },
-
-    async uploadPhoto (req, res, next) {
-        try {
-            if(req.files === null) {
-                res.json({"message": "No file upload"})
-            }
-
-            const file = req.files.file            
-            file.mv(`${__dirname}../../../client/public/uploads/${file.name}`, err => {
-                if(err) {
-                    console.log(err);
-                }
-                
-                res.json({ 
-                    filePath: `../../../public/uploads/${file.name}`
-                })
-            })
-        } catch (error) {
-            next(error)
-        }
+      );
+    } catch (error) {
+      next(error);
     }
-}
+  },
 
-module.exports = handlers 
+  async uploadPhoto(req, res, next) {
+    try {
+      if (req.files === null) {
+        res.json({ message: "No file upload" });
+      }
+
+      const file = req.files.file;
+      const filename = file.name.replace(/\..+$/, "");
+      const newFilename = `huetravel-${filename}-${Date.now()}.jpeg`;
+      const targetPathUrl = `${__dirname}../../../client/public/uploads/${newFilename}`
+      await sharp(file.data).resize(640, null).toFormat("jpeg").jpeg({ quality: 90 })
+      .toFile(
+        targetPathUrl,
+        function (err) {
+          if (err) {
+            next(err)
+          }
+          res.json({
+            filePath: `../../../public/uploads/${newFilename}`,
+          });
+        }
+      );
+     
+    } catch (error) {
+      next(error);
+    }
+  },
+};
+
+module.exports = handlers;
