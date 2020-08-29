@@ -140,7 +140,7 @@ withRouter(class NameChangeForm extends Component {
                     name='userName' 
                     className={inputStyle}
                     placeholder = {placeholder}
-                    defaultValue={userName}
+                    defaultValue={userNameInitial}
                     onChange={this.inputHandler}
                     disabled={disabled}
                     />
